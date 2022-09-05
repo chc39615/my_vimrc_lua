@@ -11,6 +11,9 @@ git clone ~/.config/nvim
 ```
 2. start nvim, let the script do the rest
 
+3. if "can not find colorscheme occurs", just run :PackerSync  
+to download the files
+
 ## plugin includes
  - 'wbthomason/packer.nvim'
  - 'tpope/vim-commentary'
@@ -21,4 +24,5 @@ git clone ~/.config/nvim
  - 'akinsho/toggleterm.nvim'
  - 'powerman/vim-plugin-AnsiEsc'
  - 'marko-cerovac/material.nvim'
+
 
