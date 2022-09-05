@@ -50,11 +50,14 @@ opt.shiftwidth = 4
 opt.softtabstop = 0
 
 -- clipboard
-opt.clipboard = 'unnamedplus'
+opt.clipboard = 'unnamed'
+
+-- mouse
+opt.mouse = 'a'
 
 -- listchars
 opt.listchars = { eol = '↵', tab = '<->', extends = '»', precedes = '«', space = '␣' }
 
 -- set colorscheme
-vim.g.material_style = 'deep ocean'
+vim.g.material_style = 'darker'
 vim.cmd 'colorscheme material'

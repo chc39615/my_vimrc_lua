@@ -43,7 +43,11 @@ return require('packer').startup(function()
         config = function() require("toggleterm").setup{} end
     }
 
+    -- auto pair
+    use 'jiangmiao/auto-pairs'
+
     -- AnsiEsc
+    -- Usage: :AnsiEsc - toggle Ansi escape sequence highlighting
     use 'powerman/vim-plugin-AnsiEsc'
 
     -- colorscheme material

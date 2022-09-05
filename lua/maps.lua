@@ -38,17 +38,17 @@ map('n', '<c-right>', ':vertical resize +2<cr>', noremap)
 map('n', '<leader>e', ':NvimTreeToggle<cr>', noremap)
 
 -- telescope setting
-map('n', '<leader>ff', '<cmd>Telescope find_files<cr>', noremap)
-map('n', '<leader>fg', '<cmd>Telescope live_grep<cr>', noremap)
-map('n', '<leader>fb', '<cmd>Telescope buffers<cr>', noremap)
-map('n', '<leader>fh', '<cmd>Telescope help_tags<cr>', noremap)
+map('n', '<leader>ff', ':Telescope find_files<cr>', noremap)
+map('n', '<leader>fg', ':Telescope live_grep<cr>', noremap)
+map('n', '<leader>fb', ':Telescope buffers<cr>', noremap)
+map('n', '<leader>fh', ':Telescope help_tags<cr>', noremap)
 
 -- insert tab
 map('i', '<S-Tab>', '<c-v><Tab>', noremap)
 
 -- toggleterm
-map('n', '<C-Bslash>', '<cmb>ToggleTerm<cr>', noremap)
-map('t', '<C-Bslash>', '<cmb>ToggleTerm<cr>', noremap)
+map('n', '<C-Bslash>', ':ToggleTerm<cr>', noremap)
+map('t', '<C-Bslash>', '<cmd>ToggleTerm<cr>', noremap)
 
 -- only mapping for toggle term use term://*toggleterm#*
 local function set_terminal_keymaps()
