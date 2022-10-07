@@ -3,7 +3,7 @@ local opt = vim.opt
 -- use swap file
 opt.swapfile = true
 -- swap file location
-opt.dir = '/tmp'
+opt.dir = '~/tmp'
 
 
 
@@ -59,5 +59,5 @@ opt.mouse = 'a'
 opt.listchars = { eol = '↵', tab = '<->', extends = '»', precedes = '«', space = '␣' }
 
 -- set colorscheme
-vim.g.material_style = 'darker'
-vim.cmd 'colorscheme material'
+-- vim.g.material_style = 'darker'
+-- vim.cmd 'colorscheme material'
