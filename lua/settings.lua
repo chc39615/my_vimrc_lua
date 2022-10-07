@@ -3,7 +3,7 @@ local opt = vim.opt
 -- use swap file
 opt.swapfile = true
 -- swap file location
-opt.dir = '~/tmp'
+opt.dir = '/tmp'
 
 
 
