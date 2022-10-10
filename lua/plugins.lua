@@ -1,12 +1,12 @@
 local fn = vim.fn
 local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
 if fn.empty(fn.glob(install_path)) > 0 then
-    packer_bootstrap = fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
+    Packer_bootstrap = fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
     vim.cmd [[packadd packer.nvim]]
 end
 
 
-return require('packer').startup(function()
+return require('packer').startup(function(use)
     -- Packer can manage itself
     use 'wbthomason/packer.nvim'
 
@@ -17,8 +17,11 @@ return require('packer').startup(function()
     use {
         'nvim-lualine/lualine.nvim',
         requires = { 'kyazdani42/nvim-web-devicons', opt = true },
-        config = function() require('lualine').setup{
-            options = { theme = 'papercolor_dark' }
+        config = function()
+            require('lualine').setup {
+                options = {
+                    theme = 'papercolor_dark'
+                }
         } end
     }
 
@@ -26,11 +29,13 @@ return require('packer').startup(function()
     use {
         'kyazdani42/nvim-tree.lua',
         requires = { 'kyazdani42/nvim-web-devicons' },
-        config = function() require('nvim-tree').setup{} end
+        config = function()
+            require('nvim-tree').setup()
+        end
     }
 
     -- telescope
-    use { 
+    use {
         'nvim-telescope/telescope.nvim',
         requires = { 'nvim-lua/plenary.nvim' }
     }
@@ -38,8 +43,10 @@ return require('packer').startup(function()
     -- toggleterm
     use {
         'akinsho/toggleterm.nvim',
-        tag = 'v1.*',
-        config = function() require("toggleterm").setup{} end
+        tag = '*',
+        config = function()
+            require('toggleterm').setup()
+        end
     }
 
     -- indent_blankline
@@ -49,15 +56,15 @@ return require('packer').startup(function()
 
     -- treesitter
     use {
-        'nvim-treesitter/nvim-treesitter', 
+        'nvim-treesitter/nvim-treesitter',
         run = function() require('nvim-treesitter.install').update({ with_sync = true }) end,
-        config = function() 
-            require("nvim-treesitter.configs").setup {
-            -- A list of parser names, or "all"
-            ensure_installed = { 
-                "javascript", "html", "css", "json", "bash",
-                "make", "ninja", "cpp", "c", "dockerfile",
-                "comment", "python", "lua", "markdown", 
+        config = function()
+            require('nvim-treesitter.configs').setup {
+            -- A list of parser names, or 'all'
+            ensure_installed = {
+                'javascript', 'html', 'css', 'json', 'bash',
+                'make', 'ninja', 'cpp', 'c', 'dockerfile',
+                'comment', 'python', 'lua', 'markdown',
             },
 
             -- Install parsers synchronously (only applied to `ensure_installed`)
@@ -78,7 +85,7 @@ return require('packer').startup(function()
         }
 
         vim.api.nvim_create_autocmd(
-            {'BufEnter','BufAdd','BufNew','BufNewFile','BufWinEnter'}, 
+            {'BufEnter','BufAdd','BufNew','BufNewFile','BufWinEnter'},
             {
               group = vim.api.nvim_create_augroup('TS_FOLD_WORKAROUND', {}),
               callback = function()
@@ -90,20 +97,42 @@ return require('packer').startup(function()
         ) end,
     }
 
-    
-    -- nvim-lsp-installer
-    use { 
-        'williamboman/nvim-lsp-installer',
-        requires = {
-            { 'neovim/nvim-lspconfig' }
-        },
+    -- language server (seqence order is matter )
+    use {
+        'williamboman/mason.nvim',
+        'williamboman/mason-lspconfig.nvim',
+        'neovim/nvim-lspconfig'
     }
+
+    -- completion engine
+    use {
+        'hrsh7th/cmp-nvim-lsp',
+        'hrsh7th/cmp-buffer',
+        'hrsh7th/cmp-path',
+        'hrsh7th/cmp-cmdline',
+        'hrsh7th/nvim-cmp',
+    }
+
+    -- vsnip 
+    use {
+        'hrsh7th/cmp-vsnip',
+        'hrsh7th/vim-vsnip'
+    }
+
+    -- coq
+    -- use {
+    --     'ms-jpq/coq_nvim',
+    --     branch = 'coq',
+    --     event = 'VimEnter',
+    --     config = 'vim.cmd[[COQnow]]'
+    -- }
+    -- use { 'ms-jpq/coq.artifacts', branch = 'artifacts' }
 
     -- auto pair
     use 'jiangmiao/auto-pairs'
 
     -- surround
-    use "tpope/vim-surround"
+    use 'tpope/vim-surround'
 
     -- bufonly
     -- delete all the buffers except the cursent buffer
@@ -117,15 +146,15 @@ return require('packer').startup(function()
     -- colorscheme material
     use {
         'marko-cerovac/material.nvim',
-        config = function() 
-            vim.g.material_style = "darker"
+        config = function()
+            vim.g.material_style = 'darker'
             vim.cmd 'colorscheme material'
         end
     }
 
     -- Automatically set up your configuration after cloning packer.nvim
     -- Put this at the end after all plugins
-    if packer_bootstrap then
+    if Packer_bootstrap then
         require('packer').sync()
     end
 
