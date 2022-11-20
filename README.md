@@ -7,12 +7,9 @@
 ## installation
 1. git clone to ~/.config/nvim
 ```bash
-git clone ~/.config/nvim
+git clone https://github.com/chc39615/my_vimrc_lua.git ~/.config/nvim
 ```
 2. start nvim, let the script do the rest
-
-3. if "can not find colorscheme occurs", just run :PackerSync  
-to download the files
 
 ## plugin includes
  - 'wbthomason/packer.nvim'
@@ -32,4 +29,11 @@ to download the files
  - 'powerman/vim-plugin-AnsiEsc'
  - 'marko-cerovac/material.nvim'
 
-
+### auto complete
+ - 'hrsh7th/cmp-nvim-lsp',
+ - 'hrsh7th/cmp-buffer',
+ - 'hrsh7th/cmp-path',
+ - 'hrsh7th/cmp-cmdline',
+ - 'hrsh7th/nvim-cmp',
+ - 'hrsh7th/cmp-vsnip',
+ - 'hrsh7th/vim-vsnip'
