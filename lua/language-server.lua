@@ -86,7 +86,7 @@ end
 
 
 ------------------ config lsp-config ------------------
-local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 -- This function gets run when an LSP connects to a particular buffer
 local on_attach = function(_, bufnr)
@@ -158,6 +158,7 @@ lspconfig.sumneko_lua.setup {
             workspace = {
                 -- Make the server aware of Neovim runtime files
                 library = vim.api.nvim_get_runtime_file("", true),
+                checkThirdParty = false,
             },
             -- Do not send telemetry data containing a randomized but unique identifier
             telemetry = {
