@@ -53,14 +53,6 @@ return require('packer').startup(function(use)
         'lukas-reineke/indent-blankline.nvim',
     }
 
-    -- vim-sneak
-    -- use {
-    --     'justinmk/vim-sneak',
-    --     config = function()
-    --         vim.g["sneak#label"] = 1
-    --     end
-    -- }
-
     -- hop
     use {
         'phaazon/hop.nvim',
