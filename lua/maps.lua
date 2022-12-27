@@ -56,6 +56,28 @@ map('n', 'zh', '10zh', noremap)
 -- list buffers
 map('n', '<leader>b', ':ls<cr>:b', noremap)
 
+
+-- hop.nvim
+local hop = require('hop')
+local directions = require('hop.hint').HintDirection
+map('n', 's', ':HopChar2<cr>', { noremap = true, silent = true, nowait = true })
+
+vim.keymap.set('', 'f', function()
+    hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = true })
+end, { remap = true }
+)
+vim.keymap.set('', 'F', function()
+    hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true })
+end, { remap = true })
+vim.keymap.set('', 't', function()
+    hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = true, hint_offset = -1 })
+end, { remap = true })
+vim.keymap.set('', 'T', function()
+    hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true, hint_offset = 1 })
+end, { remap = true })
+
+
+
 -- toggleterm
 map('n', '<C-Bslash>', ':ToggleTerm<cr>', noremap)
 map('t', '<C-Bslash>', '<cmd>ToggleTerm<cr>', noremap)
@@ -72,7 +94,7 @@ end
 
 local augroup = vim.api.nvim_create_augroup("toggletermKeymap", { clear = true })
 
-vim.api.nvim_create_autocmd({"TermOpen"}, {
+vim.api.nvim_create_autocmd({ "TermOpen" }, {
     pattern = { 'term://*' },
     group = augroup,
     desc = "toggleterm keymaps",

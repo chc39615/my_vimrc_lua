@@ -43,7 +43,6 @@ return require('packer').startup(function(use)
     -- toggleterm
     use {
         'akinsho/toggleterm.nvim',
-        tag = '*',
         config = function()
             require('toggleterm').setup()
         end
@@ -52,6 +51,26 @@ return require('packer').startup(function(use)
     -- indent_blankline
     use {
         'lukas-reineke/indent-blankline.nvim',
+    }
+
+    -- vim-sneak
+    -- use {
+    --     'justinmk/vim-sneak',
+    --     config = function()
+    --         vim.g["sneak#label"] = 1
+    --     end
+    -- }
+
+    -- hop
+    use {
+        'phaazon/hop.nvim',
+        branch = 'v2',
+        config = function()
+            require('hop').setup{
+                keys = 'stenriaovmfulpwycbkxdhgjzq',
+                uppercase_labels = true,
+            }
+        end
     }
 
     -- treesitter
