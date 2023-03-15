@@ -2,7 +2,7 @@
 require("mason").setup()
 require("mason-lspconfig").setup {
     -- a list of servers to automatically install if they're not already installed
-    ensure_installed = { "sumneko_lua", "pyright" }
+    ensure_installed = { "lua_ls", "pyright" }
 }
 
 ------------------ config nvim-cmp ------------------
@@ -31,7 +31,7 @@ if cmp ~= nil or cmp ~= '' then
             ['<C-Space>'] = cmp.mapping.complete(),
             ['<CR>'] = cmp.mapping.confirm {
                 behavior = cmp.ConfirmBehavior.Replace,
-                select = true,
+                select = false,
             },
             ['<Tab>'] = cmp.mapping(
                 function(fallback)
@@ -143,7 +143,7 @@ local runtime_path = vim.split(package.path, ';')
 table.insert(runtime_path, 'lua/?.lua')
 table.insert(runtime_path, 'lua/?/init.lua')
 
-lspconfig.sumneko_lua.setup {
+lspconfig.lua_ls.setup {
     on_attach = on_attach,
     capabilities = capabilities,
     settings = {
