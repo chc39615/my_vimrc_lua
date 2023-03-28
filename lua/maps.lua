@@ -33,8 +33,6 @@ map('n', '<c-down>', ':resize +2<cr>', noremap)
 map('n', '<c-left>', ':vertical resize -2<cr>', noremap)
 map('n', '<c-right>', ':vertical resize +2<cr>', noremap)
 
--- open explore
-map('n', '<leader>e', ':NvimTreeToggle<cr>', noremap)
 
 -- change directory
 map('n', '<leader>cd', ":lcd %:p:h<cr>:pwd<cr>", noremap)
