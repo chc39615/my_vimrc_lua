@@ -2,7 +2,7 @@
 require("mason").setup()
 require("mason-lspconfig").setup {
     -- a list of servers to automatically install if they're not already installed
-    ensure_installed = { "sumneko_lua", "pyright" }
+    ensure_installed = { "lua_ls", "pyright" }
 }
 
 ------------------ config nvim-cmp ------------------
@@ -22,16 +22,16 @@ if cmp ~= nil or cmp ~= '' then
         snippet = {
             --REQUIRED - you must specify a snippet engine
             expand = function(args)
-            vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users
+                vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users
             end,
         },
-        mapping =  cmp.mapping.preset.insert({
+        mapping = cmp.mapping.preset.insert({
             ['<C-d>'] = cmp.mapping.scroll_docs(-4),
             ['<C-f>'] = cmp.mapping.scroll_docs(4),
             ['<C-Space>'] = cmp.mapping.complete(),
             ['<CR>'] = cmp.mapping.confirm {
                 behavior = cmp.ConfirmBehavior.Replace,
-                select = true,
+                select = false,
             },
             ['<Tab>'] = cmp.mapping(
                 function(fallback)
@@ -44,7 +44,7 @@ if cmp ~= nil or cmp ~= '' then
                     else
                         fallback() -- The fallback function sends a already mapped key. In this case, it's probably `<Tab>`
                     end
-                end, {'i', 's'}),
+                end, { 'i', 's' }),
             ['<S-Tab>'] = cmp.mapping(
                 function()
                     if cmp.visible() then
@@ -55,11 +55,11 @@ if cmp ~= nil or cmp ~= '' then
                 end, { 'i', 's' }),
         }),
         sources = cmp.config.sources({
-                { name = 'nvim_lsp' },
-                { name = 'vsnip' }, -- fir `vsnip` users
-            }, {
-                { name = 'buffer' },
-            })
+            { name = 'nvim_lsp' },
+            { name = 'vsnip' }, -- fir `vsnip` users
+        }, {
+            { name = 'buffer' },
+        })
     })
 
     -- use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore)
@@ -95,7 +95,7 @@ local on_attach = function(_, bufnr)
     -- many times.
     -- In this case, we create a function that lets us more easily define mappinds specific
     -- for LSP related items. It sets the mode, buffer and description for us each time.
-    local nmap = function (keys, func, desc)
+    local nmap = function(keys, func, desc)
         if desc then
             desc = 'LSP: ' .. desc
         end
@@ -122,7 +122,7 @@ local on_attach = function(_, bufnr)
     nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
     nmap('<leader>wl', function()
         print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-    end,'[W]orkspace [L]ist Folders')
+    end, '[W]orkspace [L]ist Folders')
 
     vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
         if vim.lsp.buf.format then
@@ -141,7 +141,7 @@ local runtime_path = vim.split(package.path, ';')
 table.insert(runtime_path, 'lua/?.lua')
 table.insert(runtime_path, 'lua/?/init.lua')
 
-lspconfig.sumneko_lua.setup {
+lspconfig.lua_ls.setup {
     on_attach = on_attach,
     capabilities = capabilities,
     settings = {
@@ -181,4 +181,3 @@ lspconfig.pyright.setup {
         }
     }
 }
-

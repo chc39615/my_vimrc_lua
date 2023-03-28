@@ -8,7 +8,7 @@ vim.g.mapleader = ' ' -- 'vim.g sets global variables
 local noremap = { noremap = true, silent = true }
 
 -- clear highlight
-map('n', '<leader><esc>', ':noh<cr>', noremap)
+map('n', '<leader>t', ':noh<cr>', noremap)
 
 -- select after indent
 map('v', '>', '>gv', noremap)
@@ -52,6 +52,12 @@ map('i', '<S-Tab>', '<c-v><Tab>', noremap)
 -- scroll screen horizontal
 map('n', 'zl', '10zl', noremap)
 map('n', 'zh', '10zh', noremap)
+
+map('n', 'j', '<c-d>', noremap)
+map('n', 'k', '<c-u>', noremap)
+map('n', 'h', '10zh', noremap)
+map('n', 'l', '10zl', noremap)
+
 
 -- list buffers
 map('n', '<leader>b', ':ls<cr>:b', noremap)

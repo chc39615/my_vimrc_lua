@@ -29,9 +29,6 @@ return require('packer').startup(function(use)
     use {
         'kyazdani42/nvim-tree.lua',
         requires = { 'kyazdani42/nvim-web-devicons' },
-        config = function()
-            require('nvim-tree').setup()
-        end
     }
 
     -- telescope
@@ -163,6 +160,16 @@ return require('packer').startup(function(use)
         end
     }
 
+    -- which-key
+    use {
+        'folke/which-key.nvim',
+        config = function()
+            vim.o.timeout = true
+            vim.o.timeoutlen = 300
+            require("which-key").setup{}
+        end
+    }
+
     -- Automatically set up your configuration after cloning packer.nvim
     -- Put this at the end after all plugins
     if Packer_bootstrap then
@@ -170,3 +177,4 @@ return require('packer').startup(function(use)
     end
 
 end)
+
