@@ -1,6 +1,5 @@
 local map = vim.api.nvim_set_keymap
 
-
 -- map the leader key
 map('n', '<Space>', '', {})
 vim.g.mapleader = ' ' -- 'vim.g sets global variables
@@ -46,6 +45,10 @@ map('n', '<leader>fg', ':Telescope live_grep<cr>', noremap)
 map('n', '<leader>fb', ':Telescope buffers<cr>', noremap)
 map('n', '<leader>fh', ':Telescope help_tags<cr>', noremap)
 
+map('n', '<leader>FF', ':execute "Telescope find_files default_text=" . expand("<cWORD>")<cr>', noremap)
+map('n', '<leader>GG', ':execute "Telescope live_grep default_text=" . expand("<cword>")<cr>', noremap)
+
+
 -- insert tab
 map('i', '<S-Tab>', '<c-v><Tab>', noremap)
 
@@ -61,7 +64,6 @@ map('n', 'l', '10zl', noremap)
 
 -- list buffers
 map('n', '<leader>b', ':ls<cr>:b', noremap)
-
 
 -- hop.nvim
 local hop = require('hop')
@@ -81,8 +83,6 @@ end, { remap = true })
 vim.keymap.set('', 'T', function()
     hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true, hint_offset = 1 })
 end, { remap = true })
-
-
 
 -- toggleterm
 map('n', '<C-Bslash>', ':ToggleTerm<cr>', noremap)

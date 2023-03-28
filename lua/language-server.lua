@@ -113,7 +113,9 @@ local on_attach = function(_, bufnr)
 
     -- See `:help K` for why this keymap
     nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
-    nmap('<C-k', vim.lsp.buf.signature_help, 'Signature Documentation')
+    -- in terminal ctrl+f and ctrl+F will send the same code ^F (ASCII code 0x06),
+    -- so vim cannot distinguish them, use <c-k> for move between windows
+    -- nmap('<C-K>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
     -- Lesser used LSP functionality
     nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
