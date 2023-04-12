@@ -1,57 +1,36 @@
-local fn = vim.fn
-local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
-if fn.empty(fn.glob(install_path)) > 0 then
-    Packer_bootstrap = fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
-    vim.cmd [[packadd packer.nvim]]
-end
-
-
-return require('packer').startup(function(use)
-    -- Packer can manage itself
-    use 'wbthomason/packer.nvim'
-
+return {
     -- commentary.vim
-    use 'tpope/vim-commentary'
+    'tpope/vim-commentary',
 
     -- lualine
-    use {
+    {
         'nvim-lualine/lualine.nvim',
-        requires = { 'kyazdani42/nvim-web-devicons', opt = true },
+        -- dependencies = { 'kyazdani42/nvim-web-devicons', opt = true },
         config = function()
             require('lualine').setup {
                 options = {
                     theme = 'papercolor_dark'
                 }
         } end
-    }
-
-    -- nvim-tree
-    use {
-        'kyazdani42/nvim-tree.lua',
-        requires = { 'kyazdani42/nvim-web-devicons' },
-    }
+    },
 
     -- telescope
-    use {
+    {
         'nvim-telescope/telescope.nvim',
-        requires = { 'nvim-lua/plenary.nvim' }
-    }
+        dependencies = { 'nvim-lua/plenary.nvim' }
+    },
 
     -- toggleterm
-    use {
+    {
         'akinsho/toggleterm.nvim',
         config = function()
             require('toggleterm').setup()
         end
-    }
+    },
 
-    -- indent_blankline
-    use {
-        'lukas-reineke/indent-blankline.nvim',
-    }
 
     -- hop
-    use {
+    {
         'phaazon/hop.nvim',
         branch = 'v2',
         config = function()
@@ -60,12 +39,12 @@ return require('packer').startup(function(use)
                 uppercase_labels = true,
             }
         end
-    }
+    },
 
     -- treesitter
-    use {
+    {
         'nvim-treesitter/nvim-treesitter',
-        run = function() require('nvim-treesitter.install').update({ with_sync = true }) end,
+        build = function() require('nvim-treesitter.install').update({ with_sync = true }) end,
         config = function()
             require('nvim-treesitter.configs').setup {
             -- A list of parser names, or 'all'
@@ -108,78 +87,62 @@ return require('packer').startup(function(use)
               end
             }
         ) end,
-    }
+    },
 
     -- language server (seqence order is matter )
-    use {
+    {
         'williamboman/mason.nvim',
         'williamboman/mason-lspconfig.nvim',
         'neovim/nvim-lspconfig'
-    }
+    },
 
     -- completion engine
-    use {
+    {
         'hrsh7th/cmp-nvim-lsp',
         'hrsh7th/cmp-buffer',
         'hrsh7th/cmp-path',
         'hrsh7th/cmp-cmdline',
         'hrsh7th/nvim-cmp',
-    }
+    },
 
     -- vsnip 
-    use {
+    {
         'hrsh7th/cmp-vsnip',
         'hrsh7th/vim-vsnip'
-    }
+    },
 
     -- coq
-    -- use {
+    -- {
     --     'ms-jpq/coq_nvim',
     --     branch = 'coq',
     --     event = 'VimEnter',
     --     config = 'vim.cmd[[COQnow]]'
-    -- }
-    -- use { 'ms-jpq/coq.artifacts', branch = 'artifacts' }
+    -- },
+    -- { 'ms-jpq/coq.artifacts', branch = 'artifacts' },
 
     -- auto pair
-    use 'jiangmiao/auto-pairs'
+    'jiangmiao/auto-pairs',
 
     -- surround
-    use 'tpope/vim-surround'
+    'tpope/vim-surround',
 
     -- bufonly
     -- delete all the buffers except the cursent buffer
     -- :Bonly, :BOnly, Bfonly
-    use 'schickling/vim-bufonly'
+    'schickling/vim-bufonly',
 
     -- AnsiEsc
     -- Usage: :AnsiEsc - toggle Ansi escape sequence highlighting
-    use 'powerman/vim-plugin-AnsiEsc'
-
-    -- colorscheme material
-    use {
-        'marko-cerovac/material.nvim',
-        config = function()
-            vim.g.material_style = 'darker'
-            vim.cmd 'colorscheme material'
-        end
-    }
+    'powerman/vim-plugin-AnsiEsc',
 
     -- which-key
-    use {
+    {
         'folke/which-key.nvim',
         config = function()
             vim.o.timeout = true
-            vim.o.timeoutlen = 300
+            vim.o.timeoutlen = 1000
             require("which-key").setup{}
         end
-    }
+    },
 
-    -- Automatically set up your configuration after cloning packer.nvim
-    -- Put this at the end after all plugins
-    if Packer_bootstrap then
-        require('packer').sync()
-    end
-
-end)
-
+}

@@ -58,6 +58,3 @@ opt.mouse = 'a'
 -- listchars
 opt.listchars = { eol = '↵', tab = '<->', extends = '»', precedes = '«', space = '␣' }
 
--- set colorscheme
--- vim.g.material_style = 'darker'
--- vim.cmd 'colorscheme material'

@@ -1,8 +1,10 @@
 local map = vim.api.nvim_set_keymap
 
 -- map the leader key
-map('n', '<Space>', '', {})
-vim.g.mapleader = ' ' -- 'vim.g sets global variables
+-- because lazy.nvim need to initial after map leader key
+-- move this to mypacker.lua
+-- map('n', '<Space>', '', {})
+-- vim.g.mapleader = ' ' -- 'vim.g sets global variables
 
 local noremap = { noremap = true, silent = true }
 
