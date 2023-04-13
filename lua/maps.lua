@@ -40,13 +40,13 @@ map('n', '<c-right>', ':vertical resize +2<cr>', noremap)
 map('n', '<leader>cd', ":lcd %:p:h<cr>:pwd<cr>", noremap)
 
 -- telescope setting
-map('n', '<leader>ff', ':Telescope find_files<cr>', noremap)
-map('n', '<leader>fg', ':Telescope live_grep<cr>', noremap)
-map('n', '<leader>fb', ':Telescope buffers<cr>', noremap)
-map('n', '<leader>fh', ':Telescope help_tags<cr>', noremap)
+-- map('n', '<leader>ff', ':Telescope find_files<cr>', noremap)
+-- map('n', '<leader>fg', ':Telescope live_grep<cr>', noremap)
+-- map('n', '<leader>fb', ':Telescope buffers<cr>', noremap)
+-- map('n', '<leader>fh', ':Telescope help_tags<cr>', noremap)
 
-map('n', '<leader>FF', ':execute "Telescope find_files default_text=" . expand("<cWORD>")<cr>', noremap)
-map('n', '<leader>GG', ':execute "Telescope live_grep default_text=" . expand("<cword>")<cr>', noremap)
+-- map('n', '<leader>FF', ':execute "Telescope find_files default_text=" . expand("<cWORD>")<cr>', noremap)
+-- map('n', '<leader>GG', ':execute "Telescope live_grep default_text=" . expand("<cword>")<cr>', noremap)
 
 
 -- insert tab

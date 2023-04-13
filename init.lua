@@ -1,5 +1,6 @@
-require('mylazy')
-require('settings')
+-- require('mylazy')
+require('config.lazy')
+require('options')
 require('maps')
 require('language-server')
 
