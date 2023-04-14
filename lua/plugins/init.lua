@@ -14,16 +14,6 @@ return {
         } end
     },
 
-
-    -- toggleterm
-    {
-        'akinsho/toggleterm.nvim',
-        config = function()
-            require('toggleterm').setup()
-        end
-    },
-
-
     -- hop
     {
         'phaazon/hop.nvim',

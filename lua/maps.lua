@@ -39,16 +39,6 @@ map('n', '<c-right>', ':vertical resize +2<cr>', noremap)
 -- change directory
 map('n', '<leader>cd', ":lcd %:p:h<cr>:pwd<cr>", noremap)
 
--- telescope setting
--- map('n', '<leader>ff', ':Telescope find_files<cr>', noremap)
--- map('n', '<leader>fg', ':Telescope live_grep<cr>', noremap)
--- map('n', '<leader>fb', ':Telescope buffers<cr>', noremap)
--- map('n', '<leader>fh', ':Telescope help_tags<cr>', noremap)
-
--- map('n', '<leader>FF', ':execute "Telescope find_files default_text=" . expand("<cWORD>")<cr>', noremap)
--- map('n', '<leader>GG', ':execute "Telescope live_grep default_text=" . expand("<cword>")<cr>', noremap)
-
-
 -- insert tab
 map('i', '<S-Tab>', '<c-v><Tab>', noremap)
 
@@ -84,25 +74,25 @@ vim.keymap.set('', 'T', function()
     hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true, hint_offset = 1 })
 end, { remap = true })
 
--- toggleterm
-map('n', '<C-Bslash>', ':ToggleTerm<cr>', noremap)
-map('t', '<C-Bslash>', '<cmd>ToggleTerm<cr>', noremap)
+-- -- toggleterm
+-- map('n', '<C-Bslash>', ':ToggleTerm<cr>', noremap)
+-- map('t', '<C-Bslash>', '<cmd>ToggleTerm<cr>', noremap)
 
--- only mapping for toggle term use term://*toggleterm#*
-local function set_terminal_keymaps()
-    -- change terminal mode to normal
-    vim.api.nvim_buf_set_keymap(0, 't', '<esc>', [[<c-\><c-n>]], noremap)
-    vim.api.nvim_buf_set_keymap(0, 't', '<c-h>', [[<c-\><c-n><c-w>h]], noremap)
-    vim.api.nvim_buf_set_keymap(0, 't', '<c-j>', [[<c-\><c-n><c-w>j]], noremap)
-    vim.api.nvim_buf_set_keymap(0, 't', '<c-k>', [[<c-\><c-n><c-w>k]], noremap)
-    vim.api.nvim_buf_set_keymap(0, 't', '<c-l>', [[<c-\><c-n><c-w>l]], noremap)
-end
+-- -- only mapping for toggle term use term://*toggleterm#*
+-- local function set_terminal_keymaps()
+--     -- change terminal mode to normal
+--     vim.api.nvim_buf_set_keymap(0, 't', '<esc>', [[<c-\><c-n>]], noremap)
+--     vim.api.nvim_buf_set_keymap(0, 't', '<c-h>', [[<c-\><c-n><c-w>h]], noremap)
+--     vim.api.nvim_buf_set_keymap(0, 't', '<c-j>', [[<c-\><c-n><c-w>j]], noremap)
+--     vim.api.nvim_buf_set_keymap(0, 't', '<c-k>', [[<c-\><c-n><c-w>k]], noremap)
+--     vim.api.nvim_buf_set_keymap(0, 't', '<c-l>', [[<c-\><c-n><c-w>l]], noremap)
+-- end
 
-local augroup = vim.api.nvim_create_augroup("toggletermKeymap", { clear = true })
+-- local augroup = vim.api.nvim_create_augroup("toggletermKeymap", { clear = true })
 
-vim.api.nvim_create_autocmd({ "TermOpen" }, {
-    pattern = { 'term://*' },
-    group = augroup,
-    desc = "toggleterm keymaps",
-    callback = set_terminal_keymaps
-})
+-- vim.api.nvim_create_autocmd({ "TermOpen" }, {
+--     pattern = { 'term://*' },
+--     group = augroup,
+--     desc = "toggleterm keymaps",
+--     callback = set_terminal_keymaps
+-- })
