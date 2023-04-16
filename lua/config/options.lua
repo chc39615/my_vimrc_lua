@@ -1,3 +1,6 @@
+vim.g.mapleader = " "
+vim.gmaplocalleader = " "
+
 local opt = vim.opt
 
 -- use swap file
@@ -5,7 +8,7 @@ opt.swapfile = true
 -- swap file location
 opt.dir = '/tmp'
 
-
+opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize" }
 
 -- line number settings
 opt.number = true
@@ -15,7 +18,7 @@ opt.wrap = false
 
 -- last window always has status line
 opt.laststatus = 2
-
+--
 -- show current mode
 opt.showmode = false
 
@@ -48,9 +51,10 @@ opt.expandtab = true
 opt.tabstop = 4
 opt.shiftwidth = 4
 opt.softtabstop = 0
+opt.shiftround = true
 
 -- clipboard
-opt.clipboard = 'unnamed'
+opt.clipboard = 'unnamed,unnamedplus'
 
 -- mouse
 opt.mouse = 'a'
@@ -58,3 +62,16 @@ opt.mouse = 'a'
 -- listchars
 opt.listchars = { eol = '↵', tab = '<->', extends = '»', precedes = '«', space = '␣' }
 
+-- autocomplete
+opt.completeopt = "menu,menuone,noselect"
+opt.conceallevel = 3 -- Hide * markup for bold and italic
+opt.formatoptions = "jcroqlnt" -- tcqj
+opt.grepformat = "%f:%l:%c:%m"
+opt.grepprg = "rg --vimgrep"
+opt.signcolumn = "yes"
+opt.splitbelow = true
+opt.splitright = true
+opt.termguicolors = true
+
+-- Fix markdown indentation settings
+vim.g.markdown_recommended_style = 0

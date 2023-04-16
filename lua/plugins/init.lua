@@ -14,17 +14,6 @@ return {
         } end
     },
 
-    -- hop
-    {
-        'phaazon/hop.nvim',
-        branch = 'v2',
-        config = function()
-            require('hop').setup{
-                keys = 'stenriaovmfulpwycbkxdhgjzq',
-                uppercase_labels = true,
-            }
-        end
-    },
 
     -- treesitter
     {
@@ -120,14 +109,5 @@ return {
     -- Usage: :AnsiEsc - toggle Ansi escape sequence highlighting
     'powerman/vim-plugin-AnsiEsc',
 
-    -- which-key
-    {
-        'folke/which-key.nvim',
-        config = function()
-            vim.o.timeout = true
-            vim.o.timeoutlen = 1000
-            require("which-key").setup{}
-        end
-    },
 
 }

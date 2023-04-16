@@ -8,9 +8,9 @@ vim.opt.rtp:prepend(vim.env.LAZY or lazypath)
 
 -- Must happen before plugins are required
 -- (otherwise wrong leader will be used)
-vim.api.nvim_set_keymap("n", "<Space>", "", {})
-vim.g.mapleader = " " -- 'vim.g sets global variables
-vim.g.maplocalleader = " "
+-- vim.api.nvim_set_keymap("n", "<Space>", "", {})
+-- vim.g.mapleader = " " -- 'vim.g sets global variables
+-- vim.g.maplocalleader = " "
 
 require("lazy").setup({
 	spec = {
