@@ -80,7 +80,7 @@ return {
             map('<leader>fh', '<cmd>Telescope help_tags<cr>', 'n', 'search help'),
 
             map('<leader>FF', ':execute "Telescope find_files default_text=" . expand("<cWORD>")<cr>', 'n', 'find files of current word'),
-            map('<leader>GG', ':execute "Telescope live_grep default_text=" . expand("<cword>")<cr>', 'n', 'live grep of current word'),
+            map('<leader>FG', ':execute "Telescope live_grep default_text=" . expand("<cword>")<cr>', 'n', 'live grep of current word'),
         },
     },
 
@@ -90,25 +90,25 @@ return {
         branch = 'v2',
         config = function()
             local hop = require('hop')
-            hop.setup{
+
+            hop.setup({
                 keys = 'stenriaovmfulpwycbkxdhgjzq',
                 uppercase_labels = true,
-            }
-            local hop = require('hop')
-            local directions = require('hop.hint').HintDirection
-            map('n', 's', ':HopChar2<cr>', { noremap = true, silent = true, nowait = true })
+            })
 
-            vim.keymap.set('', 'f', function()
+            local directions = require('hop.hint').HintDirection
+            vim.api.nvim_set_keymap('n', 's', ':HopChar2<cr>', { noremap = true, silent = true, nowait = true })
+
+            vim.keymap.set({ 'n', 'v' }, 'f', function()
                 hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = true })
-            end, { remap = true }
-            )
-            vim.keymap.set('', 'F', function()
+            end, { remap = true })
+            vim.keymap.set({ 'n', 'v' }, 'F', function()
                 hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true })
             end, { remap = true })
-            vim.keymap.set('', 't', function()
+            vim.keymap.set({ 'n', 'v' }, 't', function()
                 hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = true, hint_offset = -1 })
             end, { remap = true })
-            vim.keymap.set('', 'T', function()
+            vim.keymap.set({ 'n', 'v' }, 'T', function()
                 hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true, hint_offset = 1 })
             end, { remap = true })
         end,

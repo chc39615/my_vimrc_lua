@@ -2,17 +2,6 @@ return {
     -- commentary.vim
     'tpope/vim-commentary',
 
-    -- lualine
-    {
-        'nvim-lualine/lualine.nvim',
-        -- dependencies = { 'kyazdani42/nvim-web-devicons', opt = true },
-        config = function()
-            require('lualine').setup {
-                options = {
-                    theme = 'papercolor_dark'
-                }
-        } end
-    },
 
 
     -- treesitter
