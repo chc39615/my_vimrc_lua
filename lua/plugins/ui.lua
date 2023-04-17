@@ -28,17 +28,6 @@ return {
     {
         "folke/noice.nvim",
         event = "VeryLazy",
-        dependencies = {
-        -- which key integration
-        {
-            "folke/which-key.nvim",
-            -- opts = function(_, opts)
-            --     if require("myutil").has("noice.nvim") then
-            --         opts.defaults["<leader>sn"] = { name = "+noice" }
-            --     end
-            -- end,
-        },
-        },
         opts = {
             lsp = {
                 override = {
@@ -102,7 +91,7 @@ return {
         -- dependencies = { 'kyazdani42/nvim-web-devicons', opt = true },
         event = "VeryLazy",
         opts = function()
-            local icon = require("config").icons
+            local icons = require("config").icons
 
             local function fg(name)
                 return function()
@@ -122,15 +111,15 @@ return {
                     lualine_a = { "mode" },
                     lualine_b = { "branch" },
                     lualine_c = {
-                        -- {
-                        --     "diagnostics",
-                        --     symbols = {
-                        --         error = icons.diagnostics.Error,
-                        --         warn = icons.diagnostics.Warn,
-                        --         info = icons.diagnostics.Info,
-                        --         hint = icons.diagnostics.Hint,
-                        --     }
-                        -- },
+                        {
+                            "diagnostics",
+                            symbols = {
+                                error = icons.diagnostics.Error,
+                                warn = icons.diagnostics.Warn,
+                                info = icons.diagnostics.Info,
+                                hint = icons.diagnostics.Hint,
+                            }
+                        },
                         { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
                         { "filename", path = 1, symbols = { modified = "  ", readonly = "", unnamed = "" } },
                         -- stylua: ignore
@@ -174,5 +163,33 @@ return {
             }
         end,
     },
+    {
+        'lukas-reineke/indent-blankline.nvim',
+        event = { "BufReadPost", "BufNewFile" },
+        config = function()
+            vim.cmd [[highlight IndentBlanklineIndent1 guifg=#E06C75 gui=nocombine]]
+            vim.cmd [[highlight IndentBlanklineIndent2 guifg=#E5C07B gui=nocombine]]
+            vim.cmd [[highlight IndentBlanklineIndent3 guifg=#98C379 gui=nocombine]]
+            vim.cmd [[highlight IndentBlanklineIndent4 guifg=#56B6C2 gui=nocombine]]
+            vim.cmd [[highlight IndentBlanklineIndent5 guifg=#61AFEF gui=nocombine]]
+            vim.cmd [[highlight IndentBlanklineIndent6 guifg=#C678DD gui=nocombine]]
 
+            require("indent_blankline").setup {
+                space_char_blankline = " ",
+                char_highlight_list = {
+                    "IndentBlanklineIndent1",
+                    "IndentBlanklineIndent2",
+                    "IndentBlanklineIndent3",
+                    "IndentBlanklineIndent4",
+                    "IndentBlanklineIndent5",
+                    "IndentBlanklineIndent6",
+                },
+                -- char = "▏",
+                char = "│",
+                filetype_exclude = { "help", "alpha", "dashboard", "nvim-tree", "Trouble", "lazy" },
+                show_trailing_blankline_indent = false,
+                show_current_context = false,
+            }
+        end
+    },
 }

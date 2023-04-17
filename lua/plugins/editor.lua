@@ -116,12 +116,68 @@ return {
 
     -- which-key
     {
-        'folke/which-key.nvim',
-        config = function()
-            vim.o.timeout = true
-            vim.o.timeoutlen = 1000
-            require("which-key").setup{}
+        "folke/which-key.nvim",
+        event = "VeryLazy",
+        opts = {
+            plugins = { spelling = true },
+        },
+        config = function(_, opts)
+            local wk = require("which-key")
+            wk.setup(opts)
+            local keymaps = {
+                mode = { "n", "v" },
+                ["g"] = { name = "+goto" },
+                ["gz"] = { name = "+surround" },
+                ["]"] = { name = "+next" },
+                ["["] = { name = "+prev" },
+                ["<leader><tab>"] = { name = "+tabs" },
+                ["<leader>b"] = { name = "+buffer" },
+                ["<leader>c"] = { name = "+code" },
+                ["<leader>f"] = { name = "+file/find" },
+                ["<leader>g"] = { name = "+git" },
+                ["<leader>gh"] = { name = "+hunks" },
+                ["<leader>q"] = { name = "+quit/session" },
+                ["<leader>s"] = { name = "+search" },
+                ["<leader>u"] = { name = "+ui" },
+                ["<leader>w"] = { name = "+windows" },
+                ["<leader>x"] = { name = "+diagnostics/quickfix" },
+            }
+            if Util.has("noice.nvim") then
+                keymaps["<leader>sn"] = { name = "+noice" }
+            end
+            wk.register(keymaps)
         end,
     },
+    {
+        'akinsho/toggleterm.nvim',
+        config = function()
+            local map = vim.api.nvim_set_keymap
+            local noremap = { noremap = true, silent = true }
 
+            -- execute toggleterm
+            require('toggleterm').setup()
+
+            map('n', '<C-Bslash>', ':ToggleTerm<cr>', noremap)
+            map('t', '<C-Bslash>', '<cmd>ToggleTerm<cr>', noremap)
+
+            -- only mapping for toggle term use term://*toggleterm#*
+            local function set_terminal_keymaps()
+                -- change terminal mode to normal
+                vim.api.nvim_buf_set_keymap(0, 't', '<esc>', [[<c-\><c-n>]], noremap)
+                vim.api.nvim_buf_set_keymap(0, 't', '<c-h>', [[<c-\><c-n><c-w>h]], noremap)
+                vim.api.nvim_buf_set_keymap(0, 't', '<c-j>', [[<c-\><c-n><c-w>j]], noremap)
+                vim.api.nvim_buf_set_keymap(0, 't', '<c-k>', [[<c-\><c-n><c-w>k]], noremap)
+                vim.api.nvim_buf_set_keymap(0, 't', '<c-l>', [[<c-\><c-n><c-w>l]], noremap)
+            end
+
+            local augroup = vim.api.nvim_create_augroup("toggletermKeymap", { clear = true })
+
+            vim.api.nvim_create_autocmd({ "TermOpen" }, {
+                pattern = { 'term://*' },
+                group = augroup,
+                desc = "toggleterm keymaps",
+                callback = set_terminal_keymaps
+            })
+        end
+    },
 }
