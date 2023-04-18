@@ -6,7 +6,7 @@ local opt = vim.opt
 -- use swap file
 opt.swapfile = true
 -- swap file location
-opt.dir = '/tmp'
+opt.dir = "/tmp"
 
 opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize" }
 
@@ -22,24 +22,21 @@ opt.laststatus = 2
 -- show current mode
 opt.showmode = false
 
-
 -- search options
 opt.ignorecase = true
 opt.smartcase = true
 opt.hlsearch = true
 opt.incsearch = true
 
-
 -- keep 12 lines below
 opt.scrolloff = 12
 
 -- allow <BS> <DEL> CTRL-W CTRL-U in insert mode to delete
-opt.backspace = 'indent,eol,start'
+opt.backspace = "indent,eol,start"
 
 -- auto indent
 opt.autoindent = true
 opt.smartindent = true
-
 
 -- a <Tab> in front of a line inserts blanks
 opt.smarttab = true
@@ -54,13 +51,13 @@ opt.softtabstop = 0
 opt.shiftround = true
 
 -- clipboard
-opt.clipboard = 'unnamed,unnamedplus'
+opt.clipboard = "unnamed,unnamedplus"
 
 -- mouse
-opt.mouse = 'a'
+opt.mouse = "a"
 
 -- listchars
-opt.listchars = { eol = '↵', tab = '<->', extends = '»', precedes = '«', space = '␣' }
+opt.listchars = { eol = "↵", tab = "<->", extends = "»", precedes = "«", space = "␣" }
 
 -- autocomplete
 opt.completeopt = "menu,menuone,noselect"

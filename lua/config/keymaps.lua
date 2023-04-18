@@ -28,15 +28,15 @@ map("v", "<A-k>", ":m '<-2<cr>gv=gv", { desc = "Move up" })
 
 -- buffers
 if Util.has("bufferline.nvim") then
-    map("n", "<S-h>", "<cmd>BufferLineCyclePrev<cr>", { desc = "Prev buffer" })
-    map("n", "<S-l>", "<cmd>BufferLineCycleNext<cr>", { desc = "Next buffer" })
-    map("n", "[b", "<cmd>BufferLineCyclePrev<cr>", { desc = "Prev buffer" })
-    map("n", "]b", "<cmd>BufferLineCycleNext<cr>", { desc = "Next buffer" })
+	map("n", "<S-h>", "<cmd>BufferLineCyclePrev<cr>", { desc = "Prev buffer" })
+	map("n", "<S-l>", "<cmd>BufferLineCycleNext<cr>", { desc = "Next buffer" })
+	map("n", "[b", "<cmd>BufferLineCyclePrev<cr>", { desc = "Prev buffer" })
+	map("n", "]b", "<cmd>BufferLineCycleNext<cr>", { desc = "Next buffer" })
 else
-    map("n", "<S-h>", "<cmd>bprevious<cr>", { desc = "Prev buffer" })
-    map("n", "<S-l>", "<cmd>bnext<cr>", { desc = "Next buffer" })
-    map("n", "[b", "<cmd>bprevious<cr>", { desc = "Prev buffer" })
-    map("n", "]b", "<cmd>bnext<cr>", { desc = "Next buffer" })
+	map("n", "<S-h>", "<cmd>bprevious<cr>", { desc = "Prev buffer" })
+	map("n", "<S-l>", "<cmd>bnext<cr>", { desc = "Next buffer" })
+	map("n", "[b", "<cmd>bprevious<cr>", { desc = "Prev buffer" })
+	map("n", "]b", "<cmd>bnext<cr>", { desc = "Next buffer" })
 end
 map("n", "<leader>bb", "<cmd>b#<cr>", { desc = "Switch to Other Buffer" })
 map("n", "<leader>`", "<cmd>b#<cr>", { desc = "Switch to other buffer" })
@@ -47,10 +47,10 @@ map({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>", { desc = "Escape and clear hlsea
 -- Clear search, diff update and redraw
 -- take from runtime/lua/_editor.lua
 map(
-    "n",
-    "<leader>ur",
-    "<cmd>nohlsearch<bar>diffupdate<bar>normal! <C-L><cr>",
-    { desc = "redraw /clear helsearch / diff update" }
+	"n",
+	"<leader>ur",
+	"<cmd>nohlsearch<bar>diffupdate<bar>normal! <C-L><cr>",
+	{ desc = "redraw /clear helsearch / diff update" }
 )
 
 -- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
@@ -73,43 +73,58 @@ map("n", "<leader>xl", "<cmd>lopen<cr>", { desc = "Location List" })
 map("n", "<leader>xq", "<cmd>copen<cr>", { desc = "Quickfix List" })
 
 if not Util.has("trouble.nvim") then
-    map("n", "[q", vim.cmd.cprev, { desc = "Previous quickfix" })
-    map("n", "]q", vim.cmd.cnext, { desc = "Next quickfix" })
+	map("n", "[q", vim.cmd.cprev, { desc = "Previous quickfix" })
+	map("n", "]q", vim.cmd.cnext, { desc = "Next quickfix" })
 end
 
-
--- toggle options 
+-- toggle options
 -- map("n", "<leader>uf", require("lsp.format").toggle, { desc = "Toggle format on Save" })
-map("n", "<leader>us", function() Util.toggle("spell") end, { desc = "Toggle Spelling" })
-map("n", "<leader>uw", function() Util.toggle("wrap") end, { desc = "Toggle Word Wrap" })
-map("n", "<leader>ul", function() Util.toggle("list") end, { desc = "Toggle list" })
+map("n", "<leader>us", function()
+	Util.toggle("spell")
+end, { desc = "Toggle Spelling" })
+map("n", "<leader>uw", function()
+	Util.toggle("wrap")
+end, { desc = "Toggle Word Wrap" })
+map("n", "<leader>ul", function()
+	Util.toggle("list")
+end, { desc = "Toggle list" })
 map("n", "<leader>ud", Util.toggle_diagnostics, { desc = "Toggle Diagnostics" })
 local conceallevel = vim.o.conceallevel > 0 and vim.o.conceallevel or 3
-map("n", "<leader>uc", function() Util.toggle("conceallevel", false, { 0, conceallevel }) end, { desc = "Toggle Conceal" })
+map("n", "<leader>uc", function()
+	Util.toggle("conceallevel", false, { 0, conceallevel })
+end, { desc = "Toggle Conceal" })
 
 -- lazygit
-map("n", "<leader>gg", function() Util.float_term({ "lazygit" }, { cwd = Util.get_root }) end, { desc = "Lazygit (root dir)" })
-map("n", "<leager>GG", function() Util.float_term({ "lazygit" }) end, { desc = "Lazygit (cwd)" })
+map("n", "<leader>gg", function()
+	Util.float_term({ "lazygit" }, { cwd = Util.get_root })
+end, { desc = "Lazygit (root dir)" })
+map("n", "<leager>GG", function()
+	Util.float_term({ "lazygit" })
+end, { desc = "Lazygit (cwd)" })
 
 -- highlights under cursor
 if vim.fn.has("nvim-0.9.0") == 1 then
-    map("n", "<leader>ui", vim.show_pos, { desc = "Inspect Pos" })
+	map("n", "<leader>ui", vim.show_pos, { desc = "Inspect Pos" })
 end
 
 -- floating terminal
-map("n", "<leader>ft", function() Util.float_term(nil, { cwd = Util.get_root() }) end, { desc = "Terminal (root dir)" })
-map("n", "<leader>FT", function() Util.float_term() end, { desc = "terminal (cwd)" })
+map("n", "<leader>ft", function()
+	Util.float_term(nil, { cwd = Util.get_root() })
+end, { desc = "Terminal (root dir)" })
+map("n", "<leader>FT", function()
+	Util.float_term()
+end, { desc = "terminal (cwd)" })
 map("t", "<esc><esc>", "<C-\\><C-n>", { desc = "Terminal enter normal mode" })
 
 -- scroll screen horizontal
-map('n', 'zl', '10zl', { desc = "Move screen right" })
-map('n', 'zh', '10zh', { desc = "Move screen left" })
+map("n", "zl", "10zl", { desc = "Move screen right" })
+map("n", "zh", "10zh", { desc = "Move screen left" })
 
 -- insert tab
-map('i', '<S-Tab>', "<c-v><Tab>", { desc = "insert Tab" })
+map("i", "<S-Tab>", "<c-v><Tab>", { desc = "insert Tab" })
 
 -- go to the last character of the previously yanked text
-map('v', 'y', 'y`]', { desc = "better yank" })
+map("v", "y", "y`]", { desc = "better yank" })
 
 -- change directory
-map('n', '<leader>cd', ":lcd %:p:h<cr>:pwd<cr>", { desc = "change directory to current file path" })
+-- map('n', '<leader>cd', ":lcd %:p:h<cr>:pwd<cr>", { desc = "change directory to current file path" })
