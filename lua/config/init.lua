@@ -8,8 +8,8 @@ local defaults = {
 	end,
 	-- load the default settings
 	defaults = {
-		autocmds = false,
-		keymaps = false,
+		autocmds = true,
+		keymaps = true,
 		options = true,
 	},
 	-- icons used by other plugins
@@ -119,7 +119,9 @@ function M.load(name)
 		})
 	end
 
-	_load("config." .. name)
+	if M.defaults[name] then
+		_load("config." .. name)
+	end
 	if vim.bo.filetype == "lazy" then
 		-- HACK: LazyVim my have overwritten options of the Lazy ui, so reset this here
 		vim.cmd([[do VimResized]])

@@ -96,7 +96,7 @@ end, { desc = "Toggle Conceal" })
 
 -- lazygit
 map("n", "<leader>gg", function()
-	Util.float_term({ "lazygit" }, { cwd = Util.get_root })
+	Util.float_term({ "lazygit" }, { cwd = Util.get_root() })
 end, { desc = "Lazygit (root dir)" })
 map("n", "<leager>GG", function()
 	Util.float_term({ "lazygit" })
