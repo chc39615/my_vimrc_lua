@@ -40,6 +40,12 @@ return {
 				command_palette = true,
 				long_message_to_split = true,
 			},
+			routes = {
+				{
+					filter = { event = "msg_show", cmdline = "g/.+/?" },
+					view = "split",
+				},
+			},
 		},
         -- stylua: ignore
         keys = {
@@ -137,7 +143,7 @@ return {
                         },
                         -- stylua: ignore
                         {
-                            function() return require("noice").api.status.mod.git() end,
+                            function() return require("noice").api.status.mod.get() end,
                             cond = function() return package.loaded["noice"] and require("noice").api.status.mod.has() end,
                             color = fg("Constant"),
                         },
