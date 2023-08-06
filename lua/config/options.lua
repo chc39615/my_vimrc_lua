@@ -35,8 +35,8 @@ opt.scrolloff = 12
 opt.backspace = "indent,eol,start"
 
 -- auto indent
-opt.autoindent = true
-opt.smartindent = true
+-- opt.autoindent = true
+-- opt.smartindent = true
 
 -- a <Tab> in front of a line inserts blanks
 opt.smarttab = true
