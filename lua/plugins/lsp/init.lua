@@ -4,7 +4,7 @@ return {
 		"neovim/nvim-lspconfig",
 		event = { "BufReadPre", "BufNewFile" },
 		dependencies = {
-			{ "folke/neoconf.nvim", cmd = "Neoconf", config = true },
+			{ "folke/neoconf.nvim", cmd = "Neoconf", config = false, dependencies = { "nvim-lspconfig" } },
 			{ "folke/neodev.nvim", opts = { experimental = { pathStrict = true } } },
 			"mason.nvim",
 			"williamboman/mason-lspconfig.nvim",
@@ -21,11 +21,29 @@ return {
 			diagnostics = {
 				underline = true,
 				update_in_insert = false,
-				virtual_text = { spacing = 4, prefix = "●" },
+				virtual_text = {
+					spacing = 4,
+					source = "if_many",
+					prefix = "●",
+					-- this will set set the prefix to a function that returns the diagnostics icon based on the severity
+					-- this only works on a recent 0.10.0 build. Will be set to "●" when not supported
+					-- prefix = "icons",
+				},
 				severity_sort = true,
 			},
+			-- Enable this to enable the builtin LSP inlay hints on Neovim >= 0.10.0
+			-- Be aware that you also will need to properly configure your LSP server to
+			-- provide the inlay hints.
+			inlay_hints = {
+				enabled = false,
+			},
+			-- add any global capabilities here
+			capabilities = {},
 			-- Automatically format on save
 			autoformat = true,
+			-- Enable this to show formatters used in a notification
+			-- Useful for debugging formatter issues
+			format_notify = false,
 			-- options for vim.lsp.buf.format
 			-- `bufnr` and `filter` is handled by the LazyVim formatter,
 			-- but can be also overridden when specified
@@ -66,13 +84,34 @@ return {
 		},
 		---@param opts PluginLspOpts
 		config = function(_, opts)
+			local Util = require("myutil")
+
+			if Util.has("neoconf.nvim") then
+				local plugin = require("lazy.core.config").spec.plugins["neoconf.nvim"]
+				require("neoconf").setup(require("lazy.core.plugin").values(plugin, "opts", false))
+			end
+
 			-- setup autoformat
-			require("plugins.lsp.format").autoformat = opts.autoformat
+			-- require("plugins.lsp.format").autoformat = opts.autoformat
+			require("plugins.lsp.format").setup(opts)
+
 			-- setup formatting and keymaps
 			require("myutil").on_attach(function(client, buffer)
-				require("plugins.lsp.format").on_attach(client, buffer)
+				-- require("plugins.lsp.format").on_attach(client, buffer)
 				require("plugins.lsp.keymaps").on_attach(client, buffer)
 			end)
+
+			local register_capability = vim.lsp.handlers["client/registerCapability"]
+
+			vim.lsp.handlers["client/registerCapability"] = function(err, res, ctx)
+				local ret = register_capability(err, res, ctx)
+				local client_id = ctx.client_id
+				---@type lsp.Client
+				local client = vim.lsp.get_client_by_id(client_id)
+				local buffer = vim.api.nvim_get_current_buf()
+				require("plugins.lsp.keymaps").on_attach(client, buffer)
+				return ret
+			end
 
 			-- diagnostic
 			for name, icon in pairs(require("config").icons.diagnostics) do
@@ -81,9 +120,41 @@ return {
 			end
 			vim.diagnostic.config(opts.diagnostics)
 
+			local inlay_hint = vim.lsp.buf.inlay_hint or vim.lsp.inlay_hint
+
+			if opts.inlay_hints.enabled and inlay_hint then
+				Util.on_attach(function(client, buffer)
+					if client.supports_method("textDocument/inlayHint") then
+						inlay_hint(buffer, true)
+					end
+				end)
+			end
+
+			if type(opts.diagnostics.virtual_text) == "table" and opts.diagnostics.virtual_text.prefix == "icons" then
+				opts.diagnostics.virtual_text.prefix = vim.fn.has("nvim-0.10.0") == 0 and "●"
+					or function(diagnostic)
+						local icons = require("config").icons.diagnostics
+						for d, icon in pairs(icons) do
+							if diagnostic.severity == vim.diagnostic.severity[d:upper()] then
+								return icon
+							end
+						end
+					end
+			end
+
+			vim.diagnostic.config(vim.deepcopy(opts.diagnostics))
+
 			local servers = opts.servers
-			local capabilities =
-				require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
+			-- local capabilities =
+			-- 	require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
+			local has_cmp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+			local capabilities = vim.tbl_deep_extend(
+				"force",
+				{},
+				vim.lsp.protocol.make_client_capabilities(),
+				has_cmp and cmp_nvim_lsp.default_capabilities() or {},
+				opts.capabilities or {}
+			)
 
 			local function setup(server)
 				local server_opts = vim.tbl_deep_extend("force", {
