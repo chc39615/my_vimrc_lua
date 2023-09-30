@@ -39,7 +39,6 @@ else
 	map("n", "]b", "<cmd>bnext<cr>", { desc = "Next buffer" })
 end
 map("n", "<leader>bb", "<cmd>b#<cr>", { desc = "Switch to Other Buffer" })
-map("n", "<leader>`", "<cmd>b#<cr>", { desc = "Switch to other buffer" })
 
 -- Clear search with <esc>
 map({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>", { desc = "Escape and clear hlsearch" })
