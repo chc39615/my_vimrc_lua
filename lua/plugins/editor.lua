@@ -189,6 +189,58 @@ return {
 		end,
 	},
 
+	{
+		"hkupty/iron.nvim",
+		config = function(plugins, opts)
+			local iron = require("iron.core")
+
+			iron.setup({
+				config = {
+					-- Whether a repl should be discarded or not
+					scratch_repl = true,
+					-- Your repl definitions com here
+					repl_definition = {
+						python = {
+							-- can be a table or a function that
+							-- returns a table (see below)
+							command = { "python" },
+						},
+					},
+
+					-- How the repl window will be displayed
+					-- See below fore more information
+					repl_open_cmd = require("iron.view").split("40%"),
+				},
+				keymaps = {
+					send_motion = "<leader>rc",
+					visual_send = "<leader>rc",
+					send_file = "<leader>rf",
+					send_line = "<leader>rl",
+					send_mark = "<leader>rm",
+					mark_motion = "<leader>rmc",
+					mark_visual = "<leader>rmc",
+					remove_mark = "<leader>rmd",
+					cr = "<leader>r<CR>",
+					interrupt = "<leader>r<space>",
+					exit = "<leader>rq",
+					clear = "<leader>rx",
+				},
+				-- If the highlight is on, you can change how it looks
+				-- for the available options, check nvim_set_hl
+				highlight = {
+					italic = true,
+				},
+				ignore_blank_lines = true, -- ignore blank lines when sending visual select lines
+			})
+
+			-- iron also has a list of commands, see :h iron-commands for all available commands
+			vim.keymap.set("n", "<leader>rs", "<cmd>IronRepl<CR>")
+			vim.keymap.set("n", "<leader>rr", "<cmd>IronRestart<CR>")
+			vim.keymap.set("n", "<leader>rF", "<cmd>IronFocus<CR>")
+			vim.keymap.set("n", "<leader>rh", "<cmd>IronHide<CR>")
+		end,
+	},
+
 	-- AnsiEsc
 	-- Usage: :AnsiEsc - toggle Ansi escape sequence highlighting
 	{ "powerman/vim-plugin-AnsiEsc" },
