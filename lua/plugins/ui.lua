@@ -47,16 +47,16 @@ return {
 				},
 			},
 		},
-        -- stylua: ignore
-        keys = {
-            { "<S-Enter>", function() require("noice").redirect(vim.fn.getcmdline()) end, mode = "c", desc = "Redirect Cmdline" },
-            { "<leader>snl", function() require("noice").cmd("last") end, desc = "Noice Last Message" },
-            { "<leader>snh", function() require("noice").cmd("history") end, desc = "Noice History" },
-            { "<leader>sna", function() require("noice").cmd("all") end, desc = "Noice All" },
-            { "<leader>snd", function() require("noice").cmd("dismiss") end, desc = "Dismiss All" },
-            { "<c-f>", function() if not require("noice.lsp").scroll(4) then return "<c-f>" end end, silent = true, expr = true, desc = "Scroll forward", mode = {"i", "n", "s"} },
-            { "<c-b>", function() if not require("noice.lsp").scroll(-4) then return "<c-b>" end end, silent = true, expr = true, desc = "Scroll backward", mode = {"i", "n", "s"}},
-        },
+		-- stylua: ignore
+		keys = {
+			{ "<S-Enter>", function() require("noice").redirect(vim.fn.getcmdline()) end, mode = "c", desc = "Redirect Cmdline" },
+			{ "<leader>snl", function() require("noice").cmd("last") end, desc = "Noice Last Message" },
+			{ "<leader>snh", function() require("noice").cmd("history") end, desc = "Noice History" },
+			{ "<leader>sna", function() require("noice").cmd("all") end, desc = "Noice All" },
+			{ "<leader>snd", function() require("noice").cmd("dismiss") end, desc = "Dismiss All" },
+			{ "<c-f>", function() if not require("noice.lsp").scroll(4) then return "<c-f>" end end, silent = true, expr = true, desc = "Scroll forward", mode = {"i", "n", "s"} },
+			{ "<c-b>", function() if not require("noice.lsp").scroll(-4) then return "<c-b>" end end, silent = true, expr = true, desc = "Scroll backward", mode = {"i", "n", "s"}},
+		},
 	},
 
 	-- Better `vim.notify()`
@@ -128,25 +128,25 @@ return {
 						},
 						{ "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
 						{ "filename", path = 1, symbols = { modified = "  ", readonly = "", unnamed = "" } },
-                        -- stylua: ignore
-                        {
-                            function() return require("nvim-navic").get_location() end,
-                            cond = function() return package.loaded["nvim-navic"] and require("nvim-navic").is_available() end,
-                        },
+						-- stylua: ignore
+						{
+							function() return require("nvim-navic").get_location() end,
+							cond = function() return package.loaded["nvim-navic"] and require("nvim-navic").is_available() end,
+						},
 					},
 					lualine_x = {
-                        -- stylua: ignore
-                        {
-                            function() return require("noice").api.status.command.get() end,
-                            cond = function() return package.loaded["noice"] and require("noice").api.status.command.has() end,
-                            color = fg("Statement"),
-                        },
-                        -- stylua: ignore
-                        {
-                            function() return require("noice").api.status.mod.get() end,
-                            cond = function() return package.loaded["noice"] and require("noice").api.status.mod.has() end,
-                            color = fg("Constant"),
-                        },
+						-- stylua: ignore
+						{
+							function() return require("noice").api.status.command.get() end,
+							cond = function() return package.loaded["noice"] and require("noice").api.status.command.has() end,
+							color = fg("Statement"),
+						},
+						-- stylua: ignore
+						{
+							function() return require("noice").api.status.mod.get() end,
+							cond = function() return package.loaded["noice"] and require("noice").api.status.mod.has() end,
+							color = fg("Constant"),
+						},
 						{
 							require("lazy.status").updates,
 							cond = require("lazy.status").has_updates,
@@ -172,30 +172,39 @@ return {
 	},
 	{
 		"lukas-reineke/indent-blankline.nvim",
+		main = "ibl",
 		event = { "BufReadPost", "BufNewFile" },
 		config = function()
-			vim.cmd([[highlight IndentBlanklineIndent1 guifg=#E06C75 gui=nocombine]])
-			vim.cmd([[highlight IndentBlanklineIndent2 guifg=#E5C07B gui=nocombine]])
-			vim.cmd([[highlight IndentBlanklineIndent3 guifg=#98C379 gui=nocombine]])
-			vim.cmd([[highlight IndentBlanklineIndent4 guifg=#56B6C2 gui=nocombine]])
-			vim.cmd([[highlight IndentBlanklineIndent5 guifg=#61AFEF gui=nocombine]])
-			vim.cmd([[highlight IndentBlanklineIndent6 guifg=#C678DD gui=nocombine]])
+			local highlight = {
+				"RainbowRed",
+				"RainbowYellow",
+				"RainbowBlue",
+				"RainbowOrange",
+				"RainbowGreen",
+				"RainbowViolet",
+				"RainbowCyan",
+			}
+			local hooks = require("ibl.hooks")
+			hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
+				vim.api.nvim_set_hl(0, "RainbowRed", { fg = "#E06C75" })
+				vim.api.nvim_set_hl(0, "RainbowYellow", { fg = "#E5C07B" })
+				vim.api.nvim_set_hl(0, "RainbowBlue", { fg = "#61AFEF" })
+				vim.api.nvim_set_hl(0, "RainbowOrange", { fg = "#D19A66" })
+				vim.api.nvim_set_hl(0, "RainbowGreen", { fg = "#98C379" })
+				vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#C678DD" })
+				vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#56B6C2" })
+			end)
 
-			require("indent_blankline").setup({
-				space_char_blankline = " ",
-				char_highlight_list = {
-					"IndentBlanklineIndent1",
-					"IndentBlanklineIndent2",
-					"IndentBlanklineIndent3",
-					"IndentBlanklineIndent4",
-					"IndentBlanklineIndent5",
-					"IndentBlanklineIndent6",
+			hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_space_indent_level)
+
+			require("ibl").setup({
+				indent = { highlight = highlight, char = "▏", priority = 2 },
+				scope = {
+					enabled = false,
 				},
-				-- char = "▏",
-				char = "│",
-				filetype_exclude = { "help", "alpha", "dashboard", "nvim-tree", "Trouble", "lazy" },
-				show_trailing_blankline_indent = false,
-				show_current_context = false,
+				exclude = { filetypes = { "help", "alpha", "dashboard", "nvim-tree", "Trouble", "lazy" } },
+				whitespace = { remove_blankline_trail = true },
+				-- space_char_blankline = " ",
 			})
 		end,
 	},

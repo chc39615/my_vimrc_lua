@@ -135,7 +135,7 @@ return {
 			local keymaps = {
 				mode = { "n", "v" },
 				["g"] = { name = "+goto" },
-				["gz"] = { name = "+surround" },
+				["gs"] = { name = "+surround" },
 				["]"] = { name = "+next" },
 				["["] = { name = "+prev" },
 				["<leader><tab>"] = { name = "+tabs" },
@@ -152,6 +152,10 @@ return {
 			}
 			if Util.has("noice.nvim") then
 				keymaps["<leader>sn"] = { name = "+noice" }
+			end
+
+			if Util.has("iron.nvim") then
+				keymaps["<leader>r"] = { name = "+irons" }
 			end
 			wk.register(keymaps)
 		end,

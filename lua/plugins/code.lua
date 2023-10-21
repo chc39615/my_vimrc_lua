@@ -98,10 +98,17 @@ return {
 				sources = cmp.config.sources({
 					{ name = "nvim_lsp" },
 					{ name = "luasnip" },
-					{ name = "buffer" },
-					{ name = "cmdline" },
 					{ name = "path" },
+				}, {
+					{ name = "buffer" },
 				}),
+				-- sources = cmp.config.sources({
+				-- 	{ name = "nvim_lsp" },
+				-- 	{ name = "luasnip" },
+				-- 	{ name = "buffer" },
+				-- 	-- { name = "cmdline" },
+				-- 	-- { name = "path" },
+				-- }),
 				formatting = {
 					format = function(_, item)
 						local icons = require("config").icons.kinds
@@ -123,10 +130,17 @@ return {
 				end,
 				experimental = {
 					ghost_text = {
-						hl_group = "LspCodeLens",
+						hl_group = "CmpGhostText",
 					},
 				},
 			}
+		end,
+		config = function(_, opts)
+			for _, source in ipairs(opts.sources) do
+				source.group_index = source.group_index or 1
+			end
+			-- print(vim.inspect(opts))
+			require("cmp").setup(opts)
 		end,
 	},
 
@@ -162,13 +176,13 @@ return {
 		end,
 		opts = {
 			mappings = {
-				add = "gza", -- Add surrounding in Normal and Visual modes
-				delete = "gzd", -- Delete surrounding
-				find = "gzf", -- Find surrounding (to the right)
-				find_left = "gzF", -- Find surrounding (to the left)
-				highlight = "gzh", -- Highlight surrounding
-				replace = "gzr", -- Replace surrounding
-				update_n_lines = "gzn", -- Update `n_lines`
+				add = "gsa", -- Add surrounding in Normal and Visual modes
+				delete = "gsd", -- Delete surrounding
+				find = "gsf", -- Find surrounding (to the right)
+				find_left = "gsF", -- Find surrounding (to the left)
+				highlight = "gsh", -- Highlight surrounding
+				replace = "gsr", -- Replace surrounding
+				update_n_lines = "gsn", -- Update `n_lines`
 			},
 		},
 		config = function(_, opts)

@@ -8,12 +8,13 @@ return {
 			{ "folke/neodev.nvim", opts = { experimental = { pathStrict = true } } },
 			"mason.nvim",
 			"williamboman/mason-lspconfig.nvim",
-			{
-				"hrsh7th/cmp-nvim-lsp",
-				cond = function()
-					return require("myutil").has("nvim-cmp")
-				end,
-			},
+			-- remove to activate cmp-nvim-lsp
+			-- {
+			-- 	"hrsh7th/cmp-nvim-lsp",
+			-- 	cond = function()
+			-- 		return require("myutil").has("nvim-cmp")
+			-- 	end,
+			-- },
 		},
 		---@class PluginLspOpts
 		opts = {
@@ -68,6 +69,14 @@ return {
 						},
 					},
 				},
+				-- pyright = {},
+				pyright = {
+					analysis = {
+						autoSearchPaths = true,
+						diagnosticMode = "workspace",
+						useLibraryCodeForTypes = true,
+					},
+				},
 			},
 			-- you can do any additional lsp server setup here
 			-- return true if you dont't want this server to be setup with lspconfig
@@ -91,6 +100,7 @@ return {
 				require("neoconf").setup(require("lazy.core.plugin").values(plugin, "opts", false))
 			end
 
+			-- print(vim.inspect(opts))
 			-- setup autoformat
 			-- require("plugins.lsp.format").autoformat = opts.autoformat
 			require("plugins.lsp.format").setup(opts)
@@ -145,8 +155,6 @@ return {
 			vim.diagnostic.config(vim.deepcopy(opts.diagnostics))
 
 			local servers = opts.servers
-			-- local capabilities =
-			-- 	require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
 			local has_cmp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
 			local capabilities = vim.tbl_deep_extend(
 				"force",
@@ -184,6 +192,7 @@ return {
 			for server, server_opts in pairs(servers) do
 				if server_opts then
 					server_opts = server_opts == true and {} or server_opts
+
 					-- run manual setup if mason=false or if this is a server that cannot be installed with mason-lspconfig
 					if server_opts.mason == false or not vim.tbl_contains(all_mslp_servers, server) then
 						setup(server)
@@ -194,8 +203,7 @@ return {
 			end
 
 			if have_mason then
-				mlsp.setup({ ensure_installed = ensure_installed })
-				mlsp.setup_handlers({ setup })
+				mlsp.setup({ ensure_installed = ensure_installed, handlers = { setup } })
 			end
 		end,
 	},
@@ -235,6 +243,16 @@ return {
 		config = function(_, opts)
 			require("mason").setup(opts)
 			local mr = require("mason-registry")
+			mr:on("package:install:success", function()
+				vim.defer_fn(function()
+					-- trigger FileType envent to possibly load this newly installed LSP server
+					require("lazy.core.handler.event").trigger({
+						event = "FileType",
+						buf = vim.api.nvim_get_current_buf(),
+					})
+				end, 100)
+			end)
+
 			local function ensure_installed()
 				for _, tool in ipairs(opts.ensure_installed) do
 					local p = mr.get_package(tool)
@@ -243,11 +261,28 @@ return {
 					end
 				end
 			end
+
 			if mr.refresh then
 				mr.refresh(ensure_installed)
 			else
 				ensure_installed()
 			end
+
+			-- require("mason").setup(opts)
+			-- local mr = require("mason-registry")
+			-- local function ensure_installed()
+			-- 	for _, tool in ipairs(opts.ensure_installed) do
+			-- 		local p = mr.get_package(tool)
+			-- 		if not p:is_installed() then
+			-- 			p:install()
+			-- 		end
+			-- 	end
+			-- end
+			-- if mr.refresh then
+			-- 	mr.refresh(ensure_installed)
+			-- else
+			-- 	ensure_installed()
+			-- end
 		end,
 	},
 }
