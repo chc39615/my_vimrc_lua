@@ -44,9 +44,36 @@ return {
 		opts = function()
 			local cmp = require("cmp")
 
+			cmdline_mapping = {
+				["<Down>"] = {
+					c = function()
+						if cmp.visible() then
+							cmp.select_next_item()
+						else
+							cmp.complete()
+						end
+					end,
+				},
+				["<Up>"] = {
+					c = function()
+						if cmp.visible() then
+							cmp.select_prev_item()
+						else
+							cmp.complete()
+						end
+					end,
+				},
+				["<C-c>"] = {
+					c = cmp.mapping.abort(),
+				},
+				["<C-f>"] = {
+					c = cmp.mapping.confirm({ select = true }),
+				},
+			}
+
 			-- use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore)
 			cmp.setup.cmdline({ "/", "?" }, {
-				mapping = cmp.mapping.preset.cmdline(),
+				mapping = cmdline_mapping,
 				sources = {
 					{ name = "buffer" },
 				},
@@ -54,7 +81,7 @@ return {
 
 			-- use cmdline & path source for ':' (if you enable `native_menu`, this won't work anymore)
 			cmp.setup.cmdline(":", {
-				mapping = cmp.mapping.preset.cmdline(),
+				mapping = cmdline_mapping,
 				sources = cmp.config.sources({
 					{ name = "path" },
 				}, {
@@ -63,9 +90,7 @@ return {
 			})
 
 			return {
-				completion = {
-					completeopt = "menu,menuone,noinsert",
-				},
+				preselect = require("cmp").PreselectMode.None,
 				snippet = {
 					expand = function(args)
 						require("luasnip").lsp_expand(args.body)
@@ -76,24 +101,7 @@ return {
 					documentation = cmp.config.window.bordered(),
 				},
 				mapping = cmp.mapping.preset.insert({
-					-- ["<C-n>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
-					-- ["<C-p>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
-					-- ["<C-b>"] = cmp.mapping.scroll_docs(-4),
-					-- ["<C-f>"] = cmp.mapping.scroll_docs(4),
-					-- ["<C-Space>"] = cmp.mapping.complete(),
-					-- ["<C-e>"] = cmp.mapping.abort(),
-					["<CR>"] = cmp.mapping.confirm({ select = false }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-					-- ["<CR>"] = cmp.mapping({
-					-- 	i = function(fallback)
-					-- 		if cmp.visible() and cmp.get_active_entry() then
-					-- 			cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
-					-- 		else
-					-- 			fallback()
-					-- 		end
-					-- 	end,
-					-- 	s = cmp.mapping.confirm({ select = true }),
-					-- 	c = cmp.mapping.confirm({ select = false }),
-					-- }),
+					["<CR>"] = { i = cmp.mapping.confirm({ select = false }) },
 				}),
 				sources = cmp.config.sources({
 					{ name = "nvim_lsp" },
@@ -102,13 +110,6 @@ return {
 				}, {
 					{ name = "buffer" },
 				}),
-				-- sources = cmp.config.sources({
-				-- 	{ name = "nvim_lsp" },
-				-- 	{ name = "luasnip" },
-				-- 	{ name = "buffer" },
-				-- 	-- { name = "cmdline" },
-				-- 	-- { name = "path" },
-				-- }),
 				formatting = {
 					format = function(_, item)
 						local icons = require("config").icons.kinds
@@ -139,8 +140,12 @@ return {
 			for _, source in ipairs(opts.sources) do
 				source.group_index = source.group_index or 1
 			end
+			print(vim.inspect(opts))
 			-- print(vim.inspect(opts))
 			require("cmp").setup(opts)
+			-- require("cmp").setup({
+			-- 	preselect = require("cmp").PreselectMode.None,
+			-- })
 		end,
 	},
 
