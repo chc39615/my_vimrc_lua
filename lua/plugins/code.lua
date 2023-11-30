@@ -140,7 +140,6 @@ return {
 			for _, source in ipairs(opts.sources) do
 				source.group_index = source.group_index or 1
 			end
-			print(vim.inspect(opts))
 			-- print(vim.inspect(opts))
 			require("cmp").setup(opts)
 			-- require("cmp").setup({
