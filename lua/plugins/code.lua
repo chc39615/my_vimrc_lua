@@ -44,7 +44,7 @@ return {
 		opts = function()
 			local cmp = require("cmp")
 
-			cmdline_mapping = {
+			local cmdline_mapping = {
 				["<Down>"] = {
 					c = function()
 						if cmp.visible() then
