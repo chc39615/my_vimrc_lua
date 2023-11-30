@@ -89,6 +89,12 @@ return {
 				}),
 			})
 
+			-- copied from AstroNvim
+			local border_opts = {
+				border = "single",
+				winhighlight = "Normal:Normal,FloatBorder:FloatBorder,CursorLine:Visual,Search:None",
+			}
+
 			return {
 				preselect = require("cmp").PreselectMode.None,
 				snippet = {
@@ -97,8 +103,8 @@ return {
 					end,
 				},
 				window = {
-					completion = cmp.config.window.bordered(),
-					documentation = cmp.config.window.bordered(),
+					completion = cmp.config.window.bordered(border_opts),
+					documentation = cmp.config.window.bordered(border_opts),
 				},
 				mapping = cmp.mapping.preset.insert({
 					["<CR>"] = { i = cmp.mapping.confirm({ select = false }) },
