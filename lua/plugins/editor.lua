@@ -71,6 +71,11 @@ return {
 	{
 		"nvim-telescope/telescope.nvim",
 		dependencies = { "nvim-lua/plenary.nvim" },
+		config = function()
+			if Util.has("nvim-notify") then
+				require("telescope").load_extension("notify")
+			end
+		end,
 		keys = {
 			map("<leader>ff", Util.telescope("files"), "n", "find files"),
 			map("<leader>fg", Util.telescope("live_grep"), "n", "live grep"),

@@ -39,11 +39,27 @@ return {
 				bottom_search = true,
 				command_palette = true,
 				long_message_to_split = true,
+				lsp_doc_border = true,
 			},
 			routes = {
 				{
 					filter = { event = "msg_show", cmdline = "g/.+/?" },
 					view = "split",
+				},
+			},
+			commands = {
+				cleanhistory = {
+					view = "split",
+					opts = { enter = true, format = "notify" },
+					filter = {
+						any = {
+							{ event = "notify" },
+							{ error = true },
+							{ warning = true },
+							{ event = "msg_show", kind = { "" } },
+							{ event = "lsp", kind = "message" },
+						},
+					},
 				},
 			},
 		},
@@ -52,6 +68,7 @@ return {
 			{ "<S-Enter>", function() require("noice").redirect(vim.fn.getcmdline()) end, mode = "c", desc = "Redirect Cmdline" },
 			{ "<leader>snl", function() require("noice").cmd("last") end, desc = "Noice Last Message" },
 			{ "<leader>snh", function() require("noice").cmd("history") end, desc = "Noice History" },
+			{ "<leader>snc", function() require("noice").cmd("cleanhistory") end, desc = "Noice Clean History" },
 			{ "<leader>sna", function() require("noice").cmd("all") end, desc = "Noice All" },
 			{ "<leader>snd", function() require("noice").cmd("dismiss") end, desc = "Dismiss All" },
 			{ "<c-f>", function() if not require("noice.lsp").scroll(4) then return "<c-f>" end end, silent = true, expr = true, desc = "Scroll forward", mode = {"i", "n", "s"} },
