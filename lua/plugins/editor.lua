@@ -67,14 +67,30 @@ return {
 		end,
 	},
 
+	-- telescope-ui-select
+	{
+		"nvim-telescope/telescope-ui-select.nvim",
+	},
+
 	-- telescope
 	{
 		"nvim-telescope/telescope.nvim",
 		dependencies = { "nvim-lua/plenary.nvim" },
 		config = function()
+			local telescope = require("telescope")
+
+			require("telescope").setup({
+				extensions = {
+					["ui-select"] = {
+						require("telescope.themes").get_dropdown({}),
+					},
+				},
+			})
+
 			if Util.has("nvim-notify") then
-				require("telescope").load_extension("notify")
+				telescope.load_extension("notify")
 			end
+			telescope.load_extension("ui-select")
 		end,
 		keys = {
 			map("<leader>ff", Util.telescope("files"), "n", "find files"),
@@ -139,21 +155,25 @@ return {
 			wk.setup(opts)
 			local keymaps = {
 				mode = { "n", "v" },
-				["g"] = { name = "+goto" },
+				-- ["g"] = { name = "+goto" },
 				["gs"] = { name = "+surround" },
-				["]"] = { name = "+next" },
-				["["] = { name = "+prev" },
-				["<leader><tab>"] = { name = "+tabs" },
+				-- ["]"] = { name = "+next" },
+				-- ["["] = { name = "+prev" },
+				-- ["<leader><tab>"] = { name = "+tabs" },
 				["<leader>b"] = { name = "+buffer" },
 				["<leader>c"] = { name = "+code" },
 				["<leader>f"] = { name = "+file/find" },
 				["<leader>g"] = { name = "+git" },
-				["<leader>gh"] = { name = "+hunks" },
-				["<leader>q"] = { name = "+quit/session" },
+				-- ["<leader>gh"] = { name = "+hunks" },
+				-- ["<leader>q"] = { name = "+quit/session" },
 				["<leader>s"] = { name = "+search" },
-				["<leader>u"] = { name = "+ui" },
-				["<leader>w"] = { name = "+windows" },
-				["<leader>x"] = { name = "+diagnostics/quickfix" },
+				-- ["<leader>u"] = { name = "+ui" },
+				-- ["<leader>w"] = { name = "+windows" },
+				-- ["<leader>x"] = { name = "+diagnostics/quickfix" },
+				--
+				-- ["]d"] = { name = "+Diagnostics" },
+				-- ["]e"] = { name = "+Errors" },
+				-- ["]w"] = { name = "+Warns" },
 			}
 			if Util.has("noice.nvim") then
 				keymaps["<leader>sn"] = { name = "+noice" }

@@ -3,7 +3,7 @@ local M = {}
 ---@type PluginLspKeys
 M._keys = nil
 
----@return (LazyKeys|{has?:string})[]
+---@return (LazyKeysSpec|{has?:string})[]
 function M.get()
 	local format = require("plugins.lsp.format").format
 	if not M._keys then
@@ -18,14 +18,14 @@ function M.get()
             { "gI", "<cmd>Telescop lsp_implementations<cr>", desc = "Goto Implementation" },
             { "gt", "<cmd>Telescop lsp_type_definitions<cr>", desc = "Goto Type Definition" },
             { "K", vim.lsp.buf.hover, desc = "Hover" },
-            { "gK", vim.lsp.buf.signature_help, mode = "i", desc = "Signature Help", has = "signatureHelp" },
-            { "<c-k>", vim.lsp.buf.signature_help, mode = "i", desc = "Signature Help", has = "signatureHelp" },
-            { "]d", M.diagnostic_goto(true), desc = "Next Diagnostic" },
-            { "]d", M.diagnostic_goto(false), desc = "Prev Diagnostic" },
-            { "]e", M.diagnostic_goto(true, "ERROR"), desc = "Next Error" },
-            { "]e", M.diagnostic_goto(false, "ERROR"), desc = "Prev Error" },
-            { "]w", M.diagnostic_goto(true, "WARN"), desc = "Next Warning" },
-            { "]w", M.diagnostic_goto(false, "WARN"), desc = "Prev Warning" },
+            -- { "gK", vim.lsp.buf.signature_help, mode = "i", desc = "Signature Help", has = "signatureHelp" },
+            -- { "<c-k>", vim.lsp.buf.signature_help, mode = "i", desc = "Signature Help", has = "signatureHelp" },
+            { "]dn", M.diagnostic_goto(true), desc = "Next Diagnostic" },
+            { "]dp", M.diagnostic_goto(false), desc = "Prev Diagnostic" },
+            { "]en", M.diagnostic_goto(true, "ERROR"), desc = "Next Error" },
+            { "]ep", M.diagnostic_goto(false, "ERROR"), desc = "Prev Error" },
+            { "]wn", M.diagnostic_goto(true, "WARN"), desc = "Next Warning" },
+            { "]wp", M.diagnostic_goto(false, "WARN"), desc = "Prev Warning" },
             { "<leader>cf", format, desc = "Format Document", has = "documentFormatting" },
             { "<leader>cf", format, desc = "Format Range", mode = "v", has = "documentFormatting" },
             { "<leader>ca", vim.lsp.buf.code_action, desc = "Code Action", mode = { "n", "v" }, has = "codeAction" },
@@ -44,7 +44,7 @@ function M.get()
 
 		if require("myutil").has("inc-rename.nvim") then
 			M._keys[#M._keys + 1] = {
-				"<leader>cr",
+				"<leader><cr>",
 				function()
 					require("inc_rename")
 					return ":IncRename " .. vim.fn.expand("<cword>")
@@ -54,7 +54,7 @@ function M.get()
 				has = "rename",
 			}
 		else
-			M._keys[#M._keys + 1] = { "<leader>>cr", vim.lsp.buf.rename, desc = "Rename", has = "rename" }
+			M._keys[#M._keys + 1] = { "<leader><cr>", vim.lsp.buf.rename, desc = "Rename", has = "rename" }
 		end
 	end
 	return M._keys
@@ -86,11 +86,20 @@ function M.on_attach(client, buffer)
 end
 
 function M.diagnostic_goto(next, severity)
-	local go = next and vim.diagnostic_goto_next or vim.diagnostic_goto_prev
+	local go = next and vim.diagnostic.goto_next or vim.diagnostic.goto_prev
 	severity = severity and vim.diagnostic.severity[severity] or nil
 	return function()
 		go({ severity = severity })
 	end
 end
+
+-- print(vim.inspect(M.get()))
+
+-- local Keys = require("lazy.core.handler.keys")
+-- for _, value in ipairs(M.get()) do
+-- 	local keys = Keys.parse(value)
+-- 	print(vim.inspect(value))
+-- 	print(vim.inspect(keys))
+-- end
 
 return M

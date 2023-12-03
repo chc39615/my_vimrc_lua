@@ -40,6 +40,7 @@ return {
 			"hrsh7th/cmp-path",
 			"hrsh7th/cmp-cmdline",
 			"saadparwaiz1/cmp_luasnip",
+			"dmitmel/cmp-cmdline-history",
 		},
 		opts = function()
 			local cmp = require("cmp")
@@ -84,6 +85,7 @@ return {
 				mapping = cmdline_mapping,
 				sources = cmp.config.sources({
 					{ name = "path" },
+					{ name = "cmdline_history" },
 				}, {
 					{ name = "cmdline" },
 				}),
@@ -146,11 +148,7 @@ return {
 			for _, source in ipairs(opts.sources) do
 				source.group_index = source.group_index or 1
 			end
-			-- print(vim.inspect(opts))
 			require("cmp").setup(opts)
-			-- require("cmp").setup({
-			-- 	preselect = require("cmp").PreselectMode.None,
-			-- })
 		end,
 	},
 
@@ -202,15 +200,26 @@ return {
 	},
 
 	-- comments
-	{ "JoosepAlviste/nvim-ts-context-commentstring", lazy = true },
+	{
+		"JoosepAlviste/nvim-ts-context-commentstring",
+		lazy = true,
+		config = function()
+			vim.g.skip_ts_context_commentstring_module = true
+		end,
+	},
 
 	{
 		"echasnovski/mini.comment",
 		event = "VeryLazy",
 		opts = {
-			hooks = {
-				pre = function()
-					require("ts_context_commentstring.internal").update_commentstring({})
+			-- hooks = {
+			-- 	pre = function()
+			-- 		require("ts_context_commentstring.internal").update_commentstring({})
+			-- 	end,
+			-- },
+			options = {
+				custom_commentstring = function()
+					return require("ts_context_commentstring").calculate_commentstring() or vim.bo.commentstring
 				end,
 			},
 		},
