@@ -38,3 +38,4 @@ require("lazy").setup({
 })
 
 require("config").setup()
+require("config").init()
