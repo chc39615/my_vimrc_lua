@@ -215,6 +215,7 @@ return {
 			hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_space_indent_level)
 
 			require("ibl").setup({
+                enabled = false,
 				indent = { highlight = highlight, char = "▏", priority = 2 },
 				scope = {
 					enabled = false,

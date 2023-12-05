@@ -24,7 +24,7 @@ function M.map(mode, lhs, rhs, opts)
 	local keys = require("lazy.core.handler").handlers.keys
 	---@cast keys LazyKeysHandler
 	-- do not create the keymap if a lazy keys handler exists
-	opts = opts or {}
+	opts = opts or { silent = true, noremap = true }
 	if not keys.active[keys.parse({ lhs, mode = mode }).id] then
 		opts.silent = opts.silent ~= false
 		vim.keymap.set(mode, lhs, rhs, opts)

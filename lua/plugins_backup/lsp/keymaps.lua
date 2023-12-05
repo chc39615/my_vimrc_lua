@@ -20,12 +20,12 @@ function M.get()
             { "K", vim.lsp.buf.hover, desc = "Hover" },
             { "gK", vim.lsp.buf.signature_help, mode = "i", desc = "Signature Help", has = "signatureHelp" },
             { "<c-k>", vim.lsp.buf.signature_help, mode = "i", desc = "Signature Help", has = "signatureHelp" },
-            { "]d", M.diagnostic_goto(true), desc = "Next Diagnostic" },
-            { "]d", M.diagnostic_goto(false), desc = "Prev Diagnostic" },
-            { "]e", M.diagnostic_goto(true, "ERROR"), desc = "Next Error" },
-            { "]e", M.diagnostic_goto(false, "ERROR"), desc = "Prev Error" },
-            { "]w", M.diagnostic_goto(true, "WARN"), desc = "Next Warning" },
-            { "]w", M.diagnostic_goto(false, "WARN"), desc = "Prev Warning" },
+            { "]dn", M.diagnostic_goto(true), desc = "Next Diagnostic" },
+            { "]dp", M.diagnostic_goto(false), desc = "Prev Diagnostic" },
+            { "]en", M.diagnostic_goto(true, "ERROR"), desc = "Next Error" },
+            { "]ep", M.diagnostic_goto(false, "ERROR"), desc = "Prev Error" },
+            { "]wn", M.diagnostic_goto(true, "WARN"), desc = "Next Warning" },
+            { "]wp", M.diagnostic_goto(false, "WARN"), desc = "Prev Warning" },
             { "<leader>cf", format, desc = "Format Document", has = "documentFormatting" },
             { "<leader>cf", format, desc = "Format Range", mode = "v", has = "documentFormatting" },
             { "<leader>ca", vim.lsp.buf.code_action, desc = "Code Action", mode = { "n", "v" }, has = "codeAction" },
@@ -86,7 +86,7 @@ function M.on_attach(client, buffer)
 end
 
 function M.diagnostic_goto(next, severity)
-	local go = next and vim.diagnostic_goto_next or vim.diagnostic_goto_prev
+	local go = next and vim.diagnostic.goto_next or vim.diagnostic.goto_prev
 	severity = severity and vim.diagnostic.severity[severity] or nil
 	return function()
 		go({ severity = severity })
