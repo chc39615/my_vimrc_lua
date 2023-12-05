@@ -3,9 +3,10 @@ local M = {}
 local defaults = {
 	-- colorscheme can be a string like `catppuccin` or a function that wiil load the colowscheme
 	---@type string|fun()
-	colorscheme = function()
-		require("material.functions").change_style("oceanic")
-	end,
+	colorscheme = "tokyonight-night",
+	-- colorscheme = function()
+	--	require("material.functions").change_style("oceanic")
+	-- end,
 	-- load the default settings
 	defaults = {
 		autocmds = true,
@@ -93,7 +94,7 @@ function M.setup(opts)
 			vim.cmd.colorscheme(M.colorscheme)
 		end
 	end, {
-		msd = "Could not load your colorscheme",
+		msg = "Could not load your colorscheme",
 		on_error = function(msg)
 			require("lazy.core.util").error(msg)
 			vim.cmd.colorscheme("habamax")

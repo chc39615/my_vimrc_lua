@@ -1,24 +1,33 @@
-local Util = require("myutil")
-local vim_map = Util.map
 return {
+	-- ui components
+	{ "MunifTanjim/nui.nvim", lazy = true },
+
+	-- lsp symbol navigation for lualine
+	{
+		"SmiteshP/nvim-navic",
+		lazy = true,
+		init = function()
+			vim.g.navic_silence = true
+			require("myutil").on_attach(function(client, buffer)
+				if client.server_capabilities.documentSymbolProvider then
+					require("nvim-navic").attach(client, buffer)
+				end
+			end)
+		end,
+		opts = function()
+			return {
+				separator = " ",
+				highlight = true,
+				depth_limit = 5,
+				icons = require("config").icons.kinds,
+			}
+		end,
+	},
+
 	-- noice ui
 	{
 		"folke/noice.nvim",
 		event = "VeryLazy",
-		enabled = true,
-
-		-- stylua: ignore
-		keys = {
-			{ "<S-Enter>", function() require("noice").redirect(vim.fn.getcmdline()) end, mode = "c", desc = "Redirect Cmdline" },
-			{ "<leader>snl", function() require("noice").cmd("last") end, desc = "Noice Last Message" },
-			{ "<leader>snh", function() require("noice").cmd("history") end, desc = "Noice History" },
-			{ "<leader>snc", function() require("noice").cmd("cleanhistory") end, desc = "Noice Clean History" },
-			{ "<leader>sna", function() require("noice").cmd("all") end, desc = "Noice All" },
-			{ "<leader>snd", function() require("noice").cmd("dismiss") end, desc = "Dismiss All" },
-			{ "<c-f>", function() if not require("noice.lsp").scroll(4) then return "<c-f>" end end, silent = true, expr = true, desc = "Scroll forward", mode = {"i", "n", "s"} },
-			{ "<c-b>", function() if not require("noice.lsp").scroll(-4) then return "<c-b>" end end, silent = true, expr = true, desc = "Scroll backward", mode = {"i", "n", "s"}},
-		},
-
 		opts = {
 			lsp = {
 				override = {
@@ -54,27 +63,48 @@ return {
 				},
 			},
 		},
+		-- stylua: ignore
+		keys = {
+			{ "<S-Enter>", function() require("noice").redirect(vim.fn.getcmdline()) end, mode = "c", desc = "Redirect Cmdline" },
+			{ "<leader>snl", function() require("noice").cmd("last") end, desc = "Noice Last Message" },
+			{ "<leader>snh", function() require("noice").cmd("history") end, desc = "Noice History" },
+			{ "<leader>snc", function() require("noice").cmd("cleanhistory") end, desc = "Noice Clean History" },
+			{ "<leader>sna", function() require("noice").cmd("all") end, desc = "Noice All" },
+			{ "<leader>snd", function() require("noice").cmd("dismiss") end, desc = "Dismiss All" },
+			{ "<c-f>", function() if not require("noice.lsp").scroll(4) then return "<c-f>" end end, silent = true, expr = true, desc = "Scroll forward", mode = {"i", "n", "s"} },
+			{ "<c-b>", function() if not require("noice.lsp").scroll(-4) then return "<c-b>" end end, silent = true, expr = true, desc = "Scroll backward", mode = {"i", "n", "s"}},
+		},
 	},
 
-	-- lsp symbol navigation for lualine
+	-- Better `vim.notify()`
 	{
-		"SmiteshP/nvim-navic",
-		lazy = true,
+		"rcarriga/nvim-notify",
+		keys = {
+			{
+				"<leader>un",
+				function()
+					require("notify").dismiss({ silent = true, pending = true })
+				end,
+				desc = "Delete all Notifications",
+			},
+		},
+		opts = {
+			timeout = 3000,
+			max_height = function()
+				return math.floor(vim.o.lines * 0.75)
+			end,
+			max_width = function()
+				return math.floor(vim.o.columns * 0.75)
+			end,
+		},
 		init = function()
-			vim.g.navic_silence = true
-			require("myutil").on_attach(function(client, buffer)
-				if client.server_capabilities.documentSymbolProvider then
-					require("nvim-navic").attach(client, buffer)
-				end
-			end)
-		end,
-		opts = function()
-			return {
-				separator = " ",
-				highlight = true,
-				depth_limit = 5,
-				icons = require("config").icons.kinds,
-			}
+			-- when noice is not enabled, install notify on VeryLazy
+			local Util = require("myutil")
+			if not Util.has("noice.nvim") then
+				Util.on_very_lazy(function()
+					vim.notify = require("notify")
+				end)
+			end
 		end,
 	},
 
@@ -83,15 +113,13 @@ return {
 		"nvim-lualine/lualine.nvim",
 		-- dependencies = { 'kyazdani42/nvim-web-devicons', opt = true },
 		event = "VeryLazy",
-		enabled = true,
 		opts = function()
 			local icons = require("config").icons
 
 			local function fg(name)
 				return function()
-					local lua_id = vim.api.nvim_get_hl_id_by_name(name)
 					---@type {foreground?:number}?
-					local hl = vim.api.nvim_get_hl(lua_id, {})
+					local hl = vim.api.nvim_get_hl_by_name(name, true)
 					return hl and hl.foreground and { fg = string.format("#%06x", hl.foreground) }
 				end
 			end
@@ -125,27 +153,17 @@ return {
 					},
 					lualine_x = {
 						-- stylua: ignore
-                        {
-                            require("noice").api.status.command.get,
-                            cond = require("noice").api.status.command.has,
-                            color = fg("Statement"),
-                        },
-						-- {
-						-- 	function() return require("noice").api.status.command.get() end,
-						-- 	cond = function() return package.loaded["noice"] and require("noice").api.status.command.has() end,
-						-- 	color = fg("Statement"),
-						-- },
+						{
+							function() return require("noice").api.status.command.get() end,
+							cond = function() return package.loaded["noice"] and require("noice").api.status.command.has() end,
+							color = fg("Statement"),
+						},
 						-- stylua: ignore
-                        {
-                            require("noice").api.status.mode.get,
-                            cond = require("noice").api.status.command.has,
-                            color = fg("Constant"),
-                        },
-						-- {
-						-- 	function() return require("noice").api.status.mode.get() end,
-						-- 	cond = function() return package.loaded["noice"] and require("noice").api.status.mode.has() end,
-						-- 	color = fg("Constant"),
-						-- },
+						{
+							function() return require("noice").api.status.mod.get() end,
+							cond = function() return package.loaded["noice"] and require("noice").api.status.mod.has() end,
+							color = fg("Constant"),
+						},
 						{
 							require("lazy.status").updates,
 							cond = require("lazy.status").has_updates,
@@ -171,7 +189,6 @@ return {
 	},
 	{
 		"lukas-reineke/indent-blankline.nvim",
-		enabled = true,
 		main = "ibl",
 		event = { "BufReadPost", "BufNewFile" },
 		config = function()
@@ -198,8 +215,7 @@ return {
 			hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_space_indent_level)
 
 			require("ibl").setup({
-				enabled = false,
-				indent = { highlight = highlight, char = "▏", priority = 100 },
+				indent = { highlight = highlight, char = "▏", priority = 2 },
 				scope = {
 					enabled = false,
 				},
@@ -207,8 +223,6 @@ return {
 				whitespace = { remove_blankline_trail = true },
 				-- space_char_blankline = " ",
 			})
-
-			vim_map("n", "<leader>ub", ":IBLToggle<cr>", { noremap = true, silent = true })
 		end,
 	},
 }
