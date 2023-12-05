@@ -3,7 +3,7 @@ local M = {}
 local defaults = {
 	-- colorscheme can be a string like `catppuccin` or a function that wiil load the colowscheme
 	---@type string|fun()
-	colorscheme = "tokyonight-night",
+	colorscheme = "tokyonight-storm",
 	-- colorscheme = function()
 	--	require("material.functions").change_style("oceanic")
 	-- end,
@@ -89,6 +89,7 @@ function M.setup(opts)
 
 	require("lazy.core.util").try(function()
 		if type(M.colorscheme) == "function" then
+			print("execute colorscheme")
 			M.colorscheme()
 		else
 			vim.cmd.colorscheme(M.colorscheme)

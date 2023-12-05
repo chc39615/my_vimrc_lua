@@ -85,6 +85,9 @@ function M.get_root()
 				or {}
 			for _, p in ipairs(paths) do
 				local r = vim.loop.fs_realpath(p)
+				if r == nil then
+					r = ""
+				end
 				if path:find(r, 1, true) then
 					roots[#roots + 1] = r
 				end
@@ -126,7 +129,6 @@ function M.telescope(builtin, opts)
 	end
 end
 
--- FIXME: create a togglable terminal
 -- Opens a floating terminal (interactive by default)
 ---@param cmd? string[]|string
 ---@paramm opts? LazyCmdOptions|{interactive?:boolean}
@@ -189,7 +191,10 @@ function M.lazy_notify()
 
 	local replay = function()
 		timer:stop()
-		check:stop()
+		if check ~= nil then
+			check:stop()
+		end
+
 		if vim.notify == temp then
 			vim.notify = orig -- put back the original notify if needed
 		end
@@ -202,11 +207,13 @@ function M.lazy_notify()
 	end
 
 	-- wait till vim.notify has been replaced
-	check:start(function()
-		if vim.notify ~= temp then
-			replay()
-		end
-	end)
+	if check ~= nil then
+		check:start(function()
+			if vim.notify ~= temp then
+				replay()
+			end
+		end)
+	end
 
 	-- or if it took more than 500ms, then something went wrong
 	timer:start(500, 0, replay)
