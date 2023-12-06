@@ -67,6 +67,7 @@ return {
 
 			-- open explore
 			vim_map("n", "<leader>e", "<cmd>NvimTreeToggle<cr>")
+			vim_map("n", "<leader>fe", "<cmd>NvimTreeFindFile<cr>")
 		end,
 	},
 
@@ -162,31 +163,11 @@ return {
 		keys = {
 			map("<C-Bslash>", ":ToggleTerm<cr>", "n", "ToggleTerm"),
 		},
-		config = function()
-			-- execute toggleterm
-			require("toggleterm").setup()
-
-			-- only mapping for toggle term use term://*toggleterm#*
-			local function set_terminal_keymaps()
-				local noremap = { noremap = true, silent = true }
-				-- change terminal mode to normal
-				vim.api.nvim_buf_set_keymap(0, "t", "<esc>", [[<c-\><c-n>]], noremap)
-				vim.api.nvim_buf_set_keymap(0, "t", "<c-h>", [[<c-\><c-n><c-w>h]], noremap)
-				vim.api.nvim_buf_set_keymap(0, "t", "<c-j>", [[<c-\><c-n><c-w>j]], noremap)
-				vim.api.nvim_buf_set_keymap(0, "t", "<c-k>", [[<c-\><c-n><c-w>k]], noremap)
-				vim.api.nvim_buf_set_keymap(0, "t", "<c-l>", [[<c-\><c-n><c-w>l]], noremap)
-				vim.api.nvim_buf_set_keymap(0, "t", "<C-Bslash>", "<cmd>ToggleTerm<cr>", noremap)
-			end
-
-			local augroup = vim.api.nvim_create_augroup("toggletermKeymap", { clear = true })
-
-			vim.api.nvim_create_autocmd({ "TermOpen" }, {
-				pattern = { "term://*" },
-				group = augroup,
-				desc = "toggleterm keymaps",
-				callback = set_terminal_keymaps,
-			})
-		end,
+		config = true,
+		-- config = function()
+		-- 	-- execute toggleterm
+		-- 	require("toggleterm").setup()
+		-- end,
 	},
 
 	-- leap
