@@ -76,9 +76,11 @@ function M.on_attach(client, buffer)
 	for _, keys in pairs(keymaps) do
 		if not keys.has or client.server_capabilities[keys.has .. "Provider"] then
 			local opts = Keys.opts(keys)
-			---@diagnostic disable-next-line: no-unknown
+			---@diagnostic disable-next-line: inject-field
 			opts.has = nil
+			---@diagnostic disable-next-line: inject-field
 			opts.silent = opts.silent ~= false
+			---@diagnostic disable-next-line: inject-field
 			opts.buffer = buffer
 			vim.keymap.set(keys.mode or "n", keys.lhs, keys.rhs, opts)
 		end

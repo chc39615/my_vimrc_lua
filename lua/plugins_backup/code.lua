@@ -46,20 +46,22 @@ return {
 
 			local cmdline_mapping = {
 				["<Down>"] = {
-					c = function()
+					c = function(fallback)
 						if cmp.visible() then
 							cmp.select_next_item()
 						else
-							cmp.complete()
+							fallback()
+							-- cmp.complete()
 						end
 					end,
 				},
 				["<Up>"] = {
-					c = function()
+					c = function(fallback)
 						if cmp.visible() then
 							cmp.select_prev_item()
 						else
-							cmp.complete()
+							fallback()
+							-- cmp.complete()
 						end
 					end,
 				},
