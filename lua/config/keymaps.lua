@@ -28,13 +28,13 @@ map("v", "<A-k>", ":m '<-2<cr>gv=gv", { desc = "Move up" })
 
 -- buffers
 if Util.has("bufferline.nvim") then
-	map("n", "<S-h>", "<cmd>BufferLineCyclePrev<cr>", { desc = "Prev buffer" })
-	map("n", "<S-l>", "<cmd>BufferLineCycleNext<cr>", { desc = "Next buffer" })
+	-- map("n", "<S-h>", "<cmd>BufferLineCyclePrev<cr>", { desc = "Prev buffer" })
+	-- map("n", "<S-l>", "<cmd>BufferLineCycleNext<cr>", { desc = "Next buffer" })
 	map("n", "[b", "<cmd>BufferLineCyclePrev<cr>", { desc = "Prev buffer" })
 	map("n", "]b", "<cmd>BufferLineCycleNext<cr>", { desc = "Next buffer" })
 else
-	map("n", "<S-h>", "<cmd>bprevious<cr>", { desc = "Prev buffer" })
-	map("n", "<S-l>", "<cmd>bnext<cr>", { desc = "Next buffer" })
+	-- map("n", "<S-h>", "<cmd>bprevious<cr>", { desc = "Prev buffer" })
+	-- map("n", "<S-l>", "<cmd>bnext<cr>", { desc = "Next buffer" })
 	map("n", "[b", "<cmd>bprevious<cr>", { desc = "Prev buffer" })
 	map("n", "]b", "<cmd>bnext<cr>", { desc = "Next buffer" })
 end
@@ -113,7 +113,7 @@ end, { desc = "Terminal (root dir)" })
 map("n", "<leader>FT", function()
 	Util.float_term()
 end, { desc = "terminal (cwd)" })
-map("t", "<esc><esc>", "<C-\\><C-n>", { desc = "Terminal enter normal mode" })
+-- map("t", "<esc><esc>", "<C-\\><C-n>", { desc = "Terminal enter normal mode" })
 
 -- scroll screen horizontal
 map("n", "zl", "10zl", { desc = "Move screen right" })
