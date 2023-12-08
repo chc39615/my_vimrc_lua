@@ -73,6 +73,7 @@ return {
 			}
 
 			-- use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore)
+			---@diagnostic disable-next-line: missing-fields
 			cmp.setup.cmdline({ "/", "?" }, {
 				mapping = cmdline_mapping,
 				sources = {
@@ -81,14 +82,25 @@ return {
 			})
 
 			-- use cmdline & path source for ':' (if you enable `native_menu`, this won't work anymore)
+			---@diagnostic disable-next-line: missing-fields
 			cmp.setup.cmdline(":", {
 				mapping = cmdline_mapping,
 				sources = cmp.config.sources({
 					{ name = "path" },
-					{ name = "cmdline_history" },
 				}, {
 					{ name = "cmdline" },
+					{ name = "cmdline_history" },
 				}),
+				-- sources = cmp.config.source(
+				-- 	{
+				-- 		{ name = "path" },
+				-- 	},
+				-- 	{
+				-- 		{ name = "cmdline" },
+				-- 	}
+				-- 	-- { name = "cmdline_history" },
+				-- 	-- { name = "cmdline," }
+				-- ),
 			})
 
 			-- copied from AstroNvim
