@@ -72,3 +72,8 @@ opt.termguicolors = true
 
 -- Fix markdown indentation settings
 vim.g.markdown_recommended_style = 0
+
+-- if os is Windows, set shell=powershell
+if jit.os == "Windows" then
+	opt.shell = "powershell"
+end
