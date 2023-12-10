@@ -47,6 +47,11 @@ return {
 				renderer = {
 					group_empty = true,
 				},
+				actions = {
+					open_file = {
+						quit_on_open = true,
+					},
+				},
 			})
 
 			local function open_nvim_tree(data)

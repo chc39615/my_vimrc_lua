@@ -3,10 +3,17 @@ local M = {}
 local defaults = {
 	-- colorscheme can be a string like `catppuccin` or a function that wiil load the colowscheme
 	---@type string|fun()
-	colorscheme = "tokyonight-storm",
-	-- colorscheme = function()
-	--	require("material.functions").change_style("oceanic")
-	-- end,
+	-- colorscheme = "tokyonight",
+	colorscheme = function()
+		require("tokyonight").setup({
+			style = "storm",
+			on_colors = function(colors)
+				colors.border = "orange"
+			end,
+		})
+		vim.cmd.colorscheme("tokyonight")
+		-- require("material.functions").change_style("oceanic")
+	end,
 	-- load the default settings
 	defaults = {
 		autocmds = true,
