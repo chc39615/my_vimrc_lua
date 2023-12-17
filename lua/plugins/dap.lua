@@ -8,10 +8,19 @@ return {
 		ft = "python",
 		config = function()
 			local cwd = vim.fn.getcwd()
-			local pythons = { "/venv/Scripts/python", "venv/bin/python", "venvl/bin/python" }
+			local pythons = {}
+
+			local uv = vim.loop
+			local is_windows = uv.os_homedir() == nil
+			if is_windows then
+				table.insert(pythons, "/venv/Scripts/python")
+			else
+				table.insert(pythons, "/venv/bin/python")
+				table.insert(pythons, "/venvl/bin/python")
+			end
+
 			for _, path in pairs(pythons) do
-				local exists = vim.fn.executable(cwd .. path)
-				if exists then
+				if vim.fn.executable(cwd .. path) == 1 then
 					cwd = cwd .. path
 					break
 				end
