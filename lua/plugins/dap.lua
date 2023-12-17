@@ -10,10 +10,10 @@ return {
 			local cwd = vim.fn.getcwd()
 			local pythons = {}
 
-			local uv = vim.loop
-			local is_windows = uv.os_homedir() == nil
+			local sysname = vim.loop.os_uname().sysname
+			local is_windows = string.find(sysname:lower(), "window")
 			if is_windows then
-				table.insert(pythons, "/venv/Scripts/python")
+				table.insert(pythons, "\\venv\\Scripts\\python.exe")
 			else
 				table.insert(pythons, "/venv/bin/python")
 				table.insert(pythons, "/venvl/bin/python")
