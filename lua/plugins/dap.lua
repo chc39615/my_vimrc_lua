@@ -7,7 +7,19 @@ return {
 		"mfussenegger/nvim-dap-python",
 		ft = "python",
 		config = function()
-			require("dap-python").setup("./venvl/bin/python")
+			local cwd = vim.fn.getcwd()
+			local pythons = { "/venv/Scripts/python", "venv/bin/python", "venvl/bin/python" }
+			for _, path in pairs(pythons) do
+				local exists = vim.fn.executable(cwd .. path)
+				if exists then
+					cwd = cwd .. path
+					break
+				end
+			end
+
+			print(cwd)
+
+			require("dap-python").setup(cwd)
 		end,
 	},
 	{
