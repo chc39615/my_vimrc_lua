@@ -94,12 +94,12 @@ map("n", "<leader>uc", function()
 end, { desc = "Toggle Conceal" })
 
 -- lazygit
-map("n", "<leader>gg", function()
-	Util.float_term({ "lazygit" }, { cwd = Util.get_root() })
-end, { desc = "Lazygit (root dir)" })
-map("n", "<leager>GG", function()
-	Util.float_term({ "lazygit" })
-end, { desc = "Lazygit (cwd)" })
+-- map("n", "<leader>gg", function()
+-- 	Util.float_term({ "lazygit" }, { cwd = Util.get_root() })
+-- end, { desc = "Lazygit (root dir)" })
+-- map("n", "<leager>GG", function()
+-- 	Util.float_term({ "lazygit" })
+-- end, { desc = "Lazygit (cwd)" })
 
 -- highlights under cursor
 if vim.fn.has("nvim-0.9.0") == 1 then

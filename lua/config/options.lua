@@ -75,5 +75,16 @@ vim.g.markdown_recommended_style = 0
 
 -- if os is Windows, set shell=powershell
 if jit.os == "Windows" then
-	opt.shell = "powershell"
+	local powershell_options = {
+		shell = vim.fn.executable("pwsh") == 1 and "pwsh" or "powershell",
+		shellcmdflag = "-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;",
+		shellredir = "-RedirectStandardOutput %s -NoNewWindow -Wait",
+		shellpipe = "2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode",
+		shellquote = "",
+		shellxquote = "",
+	}
+
+	for option, value in pairs(powershell_options) do
+		opt[option] = value
+	end
 end
