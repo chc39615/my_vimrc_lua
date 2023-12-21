@@ -96,7 +96,6 @@ function M.setup(opts)
 
 	require("lazy.core.util").try(function()
 		if type(M.colorscheme) == "function" then
-			print("execute colorscheme")
 			M.colorscheme()
 		else
 			vim.cmd.colorscheme(M.colorscheme)
