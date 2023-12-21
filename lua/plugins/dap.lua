@@ -47,6 +47,15 @@ return {
 			end
 
 			require("dap-python").setup(cwd)
+
+			table.insert(require("dap").configurations.python, {
+				console = "integratedTerminal",
+				name = "Launch file with all code",
+				program = "${file}",
+				request = "launch",
+				type = "python",
+				justMyCode = false,
+			})
 		end,
 	},
 	{

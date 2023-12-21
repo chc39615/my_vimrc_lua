@@ -79,6 +79,9 @@ return {
 	-- telescope-ui-select
 	{
 		"nvim-telescope/telescope-ui-select.nvim",
+		dependencies = {
+			{ "nvim-telescope/telescope.nvim" },
+		},
 	},
 
 	-- telescope
@@ -88,18 +91,20 @@ return {
 		config = function()
 			local telescope = require("telescope")
 
-			require("telescope").setup({
-				extensions = {
-					["ui-select"] = {
-						require("telescope.themes").get_dropdown({}),
+			if Util.has("telescope-ui-select.nvim") then
+				require("telescope").setup({
+					extensions = {
+						["ui-select"] = {
+							require("telescope.themes").get_dropdown({}),
+						},
 					},
-				},
-			})
+				})
+				telescope.load_extension("ui-select")
+			end
 
 			if Util.has("nvim-notify") then
 				telescope.load_extension("notify")
 			end
-			telescope.load_extension("ui-select")
 		end,
 		keys = {
 			map("<leader>ff", Util.telescope("files"), "n", "find files"),
@@ -180,6 +185,16 @@ return {
 				direction = "float",
 				hidden = true,
 				close_on_exit = true,
+				on_open = function(term)
+					vim.cmd("startinsert!")
+					vim.api.nvim_buf_set_keymap(
+						term.bufnr,
+						"t",
+						"<esc>",
+						[[<c-\><c-n>]],
+						{ noremap = true, silent = true }
+					)
+				end,
 			})
 
 			function Toggle_lazygit()
