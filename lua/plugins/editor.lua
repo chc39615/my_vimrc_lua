@@ -171,7 +171,7 @@ return {
 	{
 		"akinsho/toggleterm.nvim",
 		keys = {
-			map("<C-Bslash>", ":ToggleTerm<cr>", "n", "ToggleTerm"),
+			map("<C-Bslash>", "<cmd>lua Toggle_horizontal()<cr>", "n", "ToggleTerm"),
 			map("<leader>gg", "<cmd>lua Toggle_lazygit()<cr>", "n", "Lazygit"),
 		},
 		-- config = true,
@@ -180,28 +180,34 @@ return {
 			require("toggleterm").setup()
 
 			local Terminal = require("toggleterm.terminal").Terminal
+
 			local lazygit = Terminal:new({
 				cmd = "lazygit",
 				direction = "float",
 				hidden = true,
 				close_on_exit = true,
-				on_open = function(term)
-					vim.cmd("startinsert!")
-					vim.api.nvim_buf_set_keymap(
-						term.bufnr,
-						"t",
-						"<esc>",
-						[[<c-\><c-n>]],
-						{ noremap = true, silent = true }
-					)
-				end,
 			})
-
 			function Toggle_lazygit()
 				lazygit:toggle()
 			end
 
-			-- vim_map("n", "<leader>gg", "<cmd>lua _lazygit_toggle()<cr>", { noremap = true, silent = true })
+			local horizontal = Terminal:new({
+				direction = "horizontal",
+				size = 20,
+				on_open = function(term)
+					local noremap = { noremap = true, silent = true }
+					-- change terminal mode to normal
+					vim.api.nvim_buf_set_keymap(term.bufnr, "t", "<esc>", [[<c-\><c-n>]], noremap)
+					vim.api.nvim_buf_set_keymap(term.bufnr, "t", "<c-h>", [[<c-\><c-n><c-w>h]], noremap)
+					vim.api.nvim_buf_set_keymap(term.bufnr, "t", "<c-j>", [[<c-\><c-n><c-w>j]], noremap)
+					vim.api.nvim_buf_set_keymap(term.bufnr, "t", "<c-k>", [[<c-\><c-n><c-w>k]], noremap)
+					vim.api.nvim_buf_set_keymap(term.bufnr, "t", "<c-l>", [[<c-\><c-n><c-w>l]], noremap)
+					vim.api.nvim_buf_set_keymap(term.bufnr, "t", "<C-Bslash>", "<cmd>ToggleTerm<cr>", noremap)
+				end,
+			})
+			function Toggle_horizontal()
+				horizontal:toggle()
+			end
 		end,
 	},
 

@@ -74,23 +74,23 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
 })
 
 -- only mapping for toggle term use term://**
-local function set_terminal_keymaps()
-	local noremap = { noremap = true, silent = true }
-	-- change terminal mode to normal
-	vim.api.nvim_buf_set_keymap(0, "t", "<esc>", [[<c-\><c-n>]], noremap)
-	vim.api.nvim_buf_set_keymap(0, "t", "<c-h>", [[<c-\><c-n><c-w>h]], noremap)
-	vim.api.nvim_buf_set_keymap(0, "t", "<c-j>", [[<c-\><c-n><c-w>j]], noremap)
-	vim.api.nvim_buf_set_keymap(0, "t", "<c-k>", [[<c-\><c-n><c-w>k]], noremap)
-	vim.api.nvim_buf_set_keymap(0, "t", "<c-l>", [[<c-\><c-n><c-w>l]], noremap)
-	vim.api.nvim_buf_set_keymap(0, "t", "<C-Bslash>", "<cmd>ToggleTerm<cr>", noremap)
-end
+-- local function set_terminal_keymaps()
+-- 	local noremap = { noremap = true, silent = true }
+-- 	-- change terminal mode to normal
+-- 	vim.api.nvim_buf_set_keymap(0, "t", "<esc>", [[<c-\><c-n>]], noremap)
+-- 	vim.api.nvim_buf_set_keymap(0, "t", "<c-h>", [[<c-\><c-n><c-w>h]], noremap)
+-- 	vim.api.nvim_buf_set_keymap(0, "t", "<c-j>", [[<c-\><c-n><c-w>j]], noremap)
+-- 	vim.api.nvim_buf_set_keymap(0, "t", "<c-k>", [[<c-\><c-n><c-w>k]], noremap)
+-- 	vim.api.nvim_buf_set_keymap(0, "t", "<c-l>", [[<c-\><c-n><c-w>l]], noremap)
+-- 	vim.api.nvim_buf_set_keymap(0, "t", "<C-Bslash>", "<cmd>ToggleTerm<cr>", noremap)
+-- end
 
-vim.api.nvim_create_autocmd({ "TermOpen" }, {
-	pattern = { "term://*" },
-	group = augroup("terminalKeymapping"),
-	desc = "windows navigator keymaps in terminal",
-	callback = set_terminal_keymaps,
-})
+-- vim.api.nvim_create_autocmd({ "TermOpen" }, {
+-- 	pattern = { "term://*" },
+-- 	group = augroup("terminalKeymapping"),
+-- 	desc = "windows navigator keymaps in terminal",
+-- 	callback = set_terminal_keymaps,
+-- })
 -- Function to check if a floating dialog exists and if not
 -- then check for diagnostics under the cursor
 -- function OpenDiagnosticIfNoFloat()
