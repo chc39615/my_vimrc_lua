@@ -79,6 +79,7 @@ return {
 	-- telescope-ui-select
 	{
 		"nvim-telescope/telescope-ui-select.nvim",
+		event = "VeryLazy",
 		dependencies = {
 			{ "nvim-telescope/telescope.nvim" },
 		},
@@ -105,26 +106,25 @@ return {
 			if Util.has("nvim-notify") then
 				telescope.load_extension("notify")
 			end
-		end,
-		keys = {
-			map("<leader>ff", Util.telescope("files"), "n", "find files"),
-			map("<leader>fg", Util.telescope("live_grep"), "n", "live grep"),
-			map("<leader>fb", "<cmd>Telescope buffers<cr>", "n", "buffers"),
-			map("<leader>fh", "<cmd>Telescope help_tags<cr>", "n", "search help"),
 
-			map(
+			vim_map("n", "<leader>ff", Util.telescope("files"), { desc = "find files" })
+			vim_map("n", "<leader>fg", Util.telescope("live_grep"), { desc = "live grep" })
+			vim_map("n", "<leader>fb", "<cmd>Telescope buffers<cr>", { desc = "buffers" })
+			vim_map("n", "<leader>fh", "<cmd>Telescope help_tags<cr>", { desc = "search help" })
+
+			vim_map(
+				"n",
 				"<leader>FF",
 				':execute "Telescope find_files default_text=" . expand("<cWORD>")<cr>',
+				{ desc = "find files of current word" }
+			)
+			vim_map(
 				"n",
-				"find files of current word"
-			),
-			map(
 				"<leader>FG",
 				':execute "Telescope live_grep default_text=" . expand("<cword>")<cr>',
-				"n",
-				"live grep of current word"
-			),
-		},
+				{ desc = "live grep of current word" }
+			)
+		end,
 	},
 
 	-- which-key
@@ -173,6 +173,7 @@ return {
 		keys = {
 			map("<C-Bslash>", "<cmd>lua Toggle_horizontal()<cr>", "n", "ToggleTerm"),
 			map("<leader>gg", "<cmd>lua Toggle_lazygit()<cr>", "n", "Lazygit"),
+			map("<leader>ft", "<cmd>lua Toggle_float()<cr>", "n", "FloatTerm"),
 		},
 		-- config = true,
 		config = function()
@@ -207,6 +208,15 @@ return {
 			})
 			function Toggle_horizontal()
 				horizontal:toggle()
+			end
+
+			local floatterm = Terminal:new({
+				direction = "float",
+				hidden = true,
+				close_on_exist = true,
+			})
+			function Toggle_float()
+				floatterm:toggle()
 			end
 		end,
 	},

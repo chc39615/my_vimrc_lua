@@ -107,17 +107,21 @@ if vim.fn.has("nvim-0.9.0") == 1 then
 end
 
 -- floating terminal
-map("n", "<leader>ft", function()
-	Util.float_term(nil, { cwd = Util.get_root() })
-end, { desc = "Terminal (root dir)" })
-map("n", "<leader>FT", function()
-	Util.float_term()
-end, { desc = "terminal (cwd)" })
+-- map("n", "<leader>ft", function()
+-- 	Util.float_term(nil, { cwd = Util.get_root() })
+-- end, { desc = "Terminal (root dir)" })
+-- map("n", "<leader>FT", function()
+-- 	Util.float_term()
+-- end, { desc = "terminal (cwd)" })
 -- map("t", "<esc><esc>", "<C-\\><C-n>", { desc = "Terminal enter normal mode" })
 
 -- scroll screen horizontal
 map("n", "zl", "10zl", { desc = "Move screen right" })
 map("n", "zh", "10zh", { desc = "Move screen left" })
+
+-- scrolling remap
+map("n", "<c-d>", "<c-d>zz")
+map("n", "<c-u>", "<c-u>zz")
 
 -- insert tab
 map("i", "<S-Tab>", "<c-v><Tab>", { desc = "insert Tab" })

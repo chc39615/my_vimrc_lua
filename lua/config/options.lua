@@ -30,6 +30,8 @@ opt.incsearch = true
 
 -- keep 12 lines below
 opt.scrolloff = 12
+-- keep 8 spaces
+opt.sidescrolloff = 8
 
 -- allow <BS> <DEL> CTRL-W CTRL-U in insert mode to delete
 opt.backspace = "indent,eol,start"
