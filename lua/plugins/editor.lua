@@ -188,8 +188,12 @@ return {
 				hidden = true,
 				close_on_exit = true,
 			})
+
 			function Toggle_lazygit()
-				lazygit:toggle()
+				local has_lazygit = vim.fn.executable("lazygit") == 1
+				if has_lazygit then
+					lazygit:toggle()
+				end
 			end
 
 			local horizontal = Terminal:new({
