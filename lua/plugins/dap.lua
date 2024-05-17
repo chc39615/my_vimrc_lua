@@ -1,6 +1,9 @@
 return {
 	{
 		"mfussenegger/nvim-dap",
+		dependencies = {
+			{ "nvim-neotest/nvim-nio" },
+		},
 		ft = "python",
 		config = function()
 			vim.fn.sign_define("DapBreakpoint", { text = "🔴", texthl = "", linehl = "", numhl = "" })

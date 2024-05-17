@@ -54,6 +54,7 @@ opt.shiftround = true
 
 -- clipboard
 opt.clipboard = "unnamed,unnamedplus"
+-- opt.clipboard:append("unnamedples")
 
 -- mouse
 opt.mouse = "a"

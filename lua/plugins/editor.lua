@@ -94,6 +94,9 @@ return {
 
 			if Util.has("telescope-ui-select.nvim") then
 				require("telescope").setup({
+					defaults = {
+						path_display = { "truncate" },
+					},
 					extensions = {
 						["ui-select"] = {
 							require("telescope.themes").get_dropdown({}),
@@ -131,6 +134,10 @@ return {
 	{
 		"folke/which-key.nvim",
 		event = "VeryLazy",
+		init = function()
+			vim.o.timeout = true
+			vim.o.timeoutlen = 500
+		end,
 		opts = {
 			plugins = { spelling = true },
 		},
