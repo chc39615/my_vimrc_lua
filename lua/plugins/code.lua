@@ -150,6 +150,7 @@ return {
 					end
 				end,
 				experimental = {
+					-- ghost_text = {},
 					ghost_text = {
 						hl_group = "CmpGhostText",
 					},
@@ -216,6 +217,7 @@ return {
 		"JoosepAlviste/nvim-ts-context-commentstring",
 		lazy = true,
 		config = function()
+			require("ts_context_commentstring").setup({})
 			vim.g.skip_ts_context_commentstring_module = true
 		end,
 	},

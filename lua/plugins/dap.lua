@@ -24,12 +24,27 @@ return {
 			-- vim.keymap.set("n", "<s-F5>", [[<cmd>lua  print("shift+F5")<cr>]])
 
 			vim.keymap.set("n", "<F9>", require("dap").toggle_breakpoint)
+			vim.keymap.set(
+				"n",
+				"<s-F9>",
+				":lua require('dap').set_breakpoint(vim.fn.input('Breakpoint condition: '))<cr>",
+				{ silent = true }
+			)
 		end,
 	},
 	{
 		"mfussenegger/nvim-dap-python",
+		dependencies = {
+			{ "folke/neodev.nvim", opts = { experimental = { pathStrict = true } } },
+		},
 		ft = "python",
 		config = function()
+			require("neodev").setup({
+				library = {
+					plugins = { "nvim-dap-ui", types = true },
+				},
+			})
+
 			local cwd = vim.fn.getcwd()
 			local pythons = {}
 
@@ -69,10 +84,58 @@ return {
 		},
 		config = function()
 			require("dapui").setup()
+			local settings = {
+				layouts = {
+					{
+						elements = {
+							{
+								id = "stacks",
+								size = 0.25,
+							},
+							{
+								id = "breakpoints",
+								size = 0.25,
+							},
+							{
+								id = "watches",
+								size = 0.25,
+							},
+							{
+								id = "scopes",
+								size = 0.25,
+							},
+						},
+						position = "left",
+						size = 0.25,
+					},
+					{
+						elements = {
+							{
+								id = "console",
+								size = 0.5,
+							},
+							{
+								id = "repl",
+								size = 0.5,
+							},
+						},
+						position = "bottom",
+						size = 0.3,
+					},
+				},
+			}
+
+			-- vim.api.nvim_create_autocmd("BufWinEnter", {
+			-- 	pattern = "\\[dap-repl\\]",
+			-- 	callback = vim.schedule_wrap(function(args)
+			-- 		vim.api.nvim_set_current_win(vim.fn.bufwinid(args.buf))
+			-- 	end),
+			-- })
 
 			local dap, dapui = require("dap"), require("dapui")
+			dapui.setup(settings)
 			dap.listeners.after.event_initialized["dapui_config"] = function()
-				dapui.open()
+				dapui.open({ reset = true })
 			end
 			dap.listeners.before.event_terminated["dapui_config"] = function()
 				dapui.close()
@@ -80,37 +143,19 @@ return {
 			dap.listeners.before.event_exited["dapui_config"] = function()
 				dapui.close()
 			end
+
+			vim.keymap.set(
+				{ "v", "n" },
+				"<A-k>",
+				"<cmd>lua require('dapui').eval(nil, { enter = true })<cr>",
+				{ silent = true }
+			)
+			vim.keymap.set(
+				"n",
+				"<F8>",
+				"<cmd>lua require('dapui').float_element(nil, { enter = true })<cr>",
+				{ silent = true }
+			)
 		end,
 	},
-	-- {
-	-- 	"nvim-neotest/neotest",
-	-- 	dependencies = {
-	-- 		"nvim-lua/plenary.nvim",
-	-- 		"antoinemadec/FixCursorHold.nvim",
-	-- 	},
-	-- 	ft = "python",
-	-- 	config = function()
-	-- 		require("neotest").setup({
-	-- 			require("neotest-python")({
-	-- 				dap = { justMyCode = false },
-	-- 			}),
-	-- 			require("neotest-plenary"),
-	-- 			require("neotest-vim-test")({
-	-- 				ignore_file_types = { "python", "vim", "lua" },
-	-- 			}),
-	-- 		})
-	-- 	end,
-	-- },
-	-- {
-	-- 	"nvim-neotest/neotest-python",
-	-- 	envent = "VeryLazy",
-	-- },
-	-- {
-	-- 	"nvim-neotest/neotest-plenary",
-	-- 	envent = "VeryLazy",
-	-- },
-	-- {
-	-- 	"nvim-neotest/neotest-vim-test",
-	-- 	envent = "VeryLazy",
-	-- },
 }
