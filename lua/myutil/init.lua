@@ -20,7 +20,9 @@ function M.has(plugin)
 	return require("lazy.core.config").plugins[plugin] ~= nil
 end
 
-function M.map(mode, lhs, rhs, opts)
+---@param mode string
+---@param desc string|table|nil
+function M.map(mode, lhs, rhs, desc, opts)
 	local keys = require("lazy.core.handler").handlers.keys
 	---@cast keys LazyKeysHandler
 	-- do not create the keymap if a lazy keys handler exists
@@ -28,6 +30,15 @@ function M.map(mode, lhs, rhs, opts)
 	if opts then
 		options = vim.tbl_extend("force", options, opts)
 	end
+
+	if desc ~= nil then
+		if type(desc) == "string" then
+			options.desc = desc
+		else
+			options = vim.tbl_extend("keep", options, desc)
+		end
+	end
+
 	-- opts = opts or { silent = true, noremap = true }
 	if not keys.active[keys.parse({ lhs, mode = mode }).id] then
 		options.silent = options.silent ~= false
@@ -35,7 +46,8 @@ function M.map(mode, lhs, rhs, opts)
 	end
 end
 
-function M.lazy_map(lhs, rhs, mode, desc, opts)
+-- return a keymap setting, need to execute vim.api.nvim_set_keymap(unpack(mapping))
+function M.map_str(lhs, rhs, mode, desc, opts)
 	mode = mode or "n"
 	opts = opts or { silent = true, noremap = true }
 	local lazyKeys = { lhs, rhs, mode }
@@ -44,16 +56,6 @@ function M.lazy_map(lhs, rhs, mode, desc, opts)
 	end
 
 	return vim.tbl_extend("keep", lazyKeys, opts)
-end
-
----@param fn fun()
-function M.on_very_lazy(fn)
-	vim.api.nvim_create_autocmd("User", {
-		pattern = "VeryLazy",
-		callback = function()
-			fn()
-		end,
-	})
 end
 
 ---@param name string
@@ -79,7 +81,7 @@ function M.get_root()
 	---@type string[]
 	local roots = {}
 	if path then
-		for _, client in pairs(vim.lsp.get_active_clients({ bufnr = 0 })) do
+		for _, client in pairs(vim.lsp.get_clients({ bufnr = 0 })) do
 			local workspace = client.config.workspace_folders
 			local paths = workspace
 					and vim.tbl_map(function(ws)
@@ -171,7 +173,7 @@ function M.toggle_diagnostics()
 		vim.diagnostic.enable()
 		Util.info("Enabled diagnostics", { title = "Diagnostics" })
 	else
-		vim.diagnostic.disable()
+		vim.diagnostic.enable(false)
 		Util.warn("Disabled diagnostics", { title = "Diagnostics" })
 	end
 end
