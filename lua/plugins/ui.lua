@@ -1,60 +1,4 @@
-local Util = require("myutil")
-local vim_map = Util.map
 return {
-	-- noice ui
-	{
-		"folke/noice.nvim",
-		event = "VeryLazy",
-		enabled = true,
-
-		-- stylua: ignore
-		keys = {
-			{ "<S-Enter>", function() require("noice").redirect(vim.fn.getcmdline()) end, mode = "c", desc = "Redirect Cmdline" },
-			{ "<leader>snl", function() require("noice").cmd("last") end, desc = "Noice Last Message" },
-			{ "<leader>snh", function() require("noice").cmd("history") end, desc = "Noice History" },
-			{ "<leader>snc", function() require("noice").cmd("cleanhistory") end, desc = "Noice Clean History" },
-			{ "<leader>sna", function() require("noice").cmd("all") end, desc = "Noice All" },
-			{ "<leader>snd", function() require("noice").cmd("dismiss") end, desc = "Dismiss All" },
-			{ "<c-f>", function() if not require("noice.lsp").scroll(4) then return "<c-f>" end end, silent = true, expr = true, desc = "Scroll forward", mode = {"i", "n", "s"} },
-			{ "<c-b>", function() if not require("noice.lsp").scroll(-4) then return "<c-b>" end end, silent = true, expr = true, desc = "Scroll backward", mode = {"i", "n", "s"}},
-		},
-
-		opts = {
-			lsp = {
-				override = {
-					["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-					["vim.lsp.util.stylize_markdown"] = true,
-				},
-			},
-			presets = {
-				bottom_search = true,
-				command_palette = true,
-				long_message_to_split = true,
-				lsp_doc_border = true,
-			},
-			routes = {
-				{
-					filter = { event = "msg_show", cmdline = "g/.+/?" },
-					view = "split",
-				},
-			},
-			commands = {
-				cleanhistory = {
-					view = "split",
-					opts = { enter = true, format = "notify" },
-					filter = {
-						any = {
-							{ event = "notify" },
-							{ error = true },
-							{ warning = true },
-							{ event = "msg_show", kind = { "" } },
-							{ event = "lsp", kind = "message" },
-						},
-					},
-				},
-			},
-		},
-	},
 
 	-- lsp symbol navigation for lualine
 	{
@@ -81,7 +25,9 @@ return {
 	-- lualine
 	{
 		"nvim-lualine/lualine.nvim",
-		-- dependencies = { 'kyazdani42/nvim-web-devicons', opt = true },
+		dependencies = {
+			{ "kyazdani42/nvim-web-devicons", opt = true },
+		},
 		event = "VeryLazy",
 		enabled = true,
 		opts = function()
@@ -116,7 +62,7 @@ return {
 							},
 						},
 						{ "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
-						{ "filename", path = 1, symbols = { modified = "  ", readonly = "", unnamed = "" } },
+						{ "filename", path = 1, symbols = { modified = "  ", readonly = "  ", unnamed = "" } },
 						-- stylua: ignore
 						{
 							function() return require("nvim-navic").get_location() end,
@@ -130,22 +76,30 @@ return {
                             cond = require("noice").api.status.command.has,
                             color = fg("Statement"),
                         },
-						-- {
-						-- 	function() return require("noice").api.status.command.get() end,
-						-- 	cond = function() return package.loaded["noice"] and require("noice").api.status.command.has() end,
-						-- 	color = fg("Statement"),
-						-- },
+						{
+							function()
+								return require("noice").api.status.command.get()
+							end,
+							cond = function()
+								return package.loaded["noice"] and require("noice").api.status.command.has()
+							end,
+							color = fg("Statement"),
+						},
 						-- stylua: ignore
                         {
                             require("noice").api.status.mode.get,
                             cond = require("noice").api.status.command.has,
                             color = fg("Constant"),
                         },
-						-- {
-						-- 	function() return require("noice").api.status.mode.get() end,
-						-- 	cond = function() return package.loaded["noice"] and require("noice").api.status.mode.has() end,
-						-- 	color = fg("Constant"),
-						-- },
+						{
+							function()
+								return require("noice").api.status.mode.get()
+							end,
+							cond = function()
+								return package.loaded["noice"] and require("noice").api.status.mode.has()
+							end,
+							color = fg("Constant"),
+						},
 						{
 							require("lazy.status").updates,
 							cond = require("lazy.status").has_updates,
@@ -169,6 +123,7 @@ return {
 			}
 		end,
 	},
+
 	{
 		"lukas-reineke/indent-blankline.nvim",
 		enabled = true,
@@ -208,7 +163,67 @@ return {
 				-- space_char_blankline = " ",
 			})
 
-			vim_map("n", "<leader>ub", ":IBLToggle<cr>", { noremap = true, silent = true })
+			vim.api.nvim_set_keymap("n", "<leader>ub", ":IBLToggle<cr>", { noremap = true, silent = true })
 		end,
+	},
+
+	-- noice ui
+	{
+		"folke/noice.nvim",
+		event = "VeryLazy",
+		enabled = true,
+		dependencies = {
+			"MunifTanjim/nui.nvim",
+		},
+
+		-- stylua: ignore
+		keys = {
+			{ "<S-Enter>", function() require("noice").redirect(vim.fn.getcmdline()) end, mode = "c", desc = "Redirect Cmdline" },
+			{ "<leader>snl", function() require("noice").cmd("last") end, desc = "Noice Last Message" },
+			{ "<leader>snh", function() require("noice").cmd("history") end, desc = "Noice History" },
+			{ "<leader>snc", function() require("noice").cmd("cleanhistory") end, desc = "Noice Clean History" },
+			{ "<leader>sna", function() require("noice").cmd("all") end, desc = "Noice All" },
+			{ "<leader>snd", function() require("noice").cmd("dismiss") end, desc = "Dismiss All" },
+			{ "<c-f>", function() if not require("noice.lsp").scroll(4) then return "<c-f>" end end, silent = true, expr = true, desc = "Scroll forward", mode = {"i", "n", "s"} },
+			{ "<c-b>", function() if not require("noice.lsp").scroll(-4) then return "<c-b>" end end, silent = true, expr = true, desc = "Scroll backward", mode = {"i", "n", "s"}},
+		},
+
+		opts = {
+			lsp = {
+				-- override markdown rendering so that **cmp** and other plugins use **Treesitter**
+				override = {
+					["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+					["vim.lsp.util.stylize_markdown"] = true,
+					["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
+				},
+			},
+			presets = {
+				bottom_search = true,
+				command_palette = true,
+				long_message_to_split = false,
+				lsp_doc_border = true,
+			},
+			routes = {
+				{
+					filter = { event = "msg_show", cmdline = "g/.+/?" },
+					view = "split",
+				},
+			},
+			commands = {
+				cleanhistory = {
+					view = "split",
+					opts = { enter = true, format = "notify" },
+					filter = {
+						any = {
+							{ event = "notify" },
+							{ error = true },
+							{ warning = true },
+							{ event = "msg_show", kind = { "" } },
+							{ event = "lsp", kind = "message" },
+						},
+					},
+				},
+			},
+		},
 	},
 }

@@ -146,13 +146,13 @@ return {
 
 			vim.keymap.set(
 				{ "v", "n" },
-				"<A-k>",
+				"<F8>",
 				"<cmd>lua require('dapui').eval(nil, { enter = true })<cr>",
 				{ silent = true }
 			)
 			vim.keymap.set(
 				"n",
-				"<F8>",
+				"<F7>",
 				"<cmd>lua require('dapui').float_element(nil, { enter = true })<cr>",
 				{ silent = true }
 			)

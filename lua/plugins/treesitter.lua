@@ -3,7 +3,10 @@ return {
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
 		-- event = { "LazyFile", "VeryLazy" },
-		event = { "BufReadPost", "BufNewfile", "VeryLazy" },
+		event = { "BufReadPre", "BufNewfile" },
+		dependencies = {
+			"nvim-treesitter/nvim-treesitter-textobjects",
+		},
 		init = function(plugin)
 			-- PERF: add nvim-treesitter queries to the rtp and it's custom query predicates early
 			-- This is needed because a bunch of plugins no longer `require("nvim-treesitter")`, which
@@ -13,55 +16,6 @@ return {
 			require("lazy.core.loader").add_to_rtp(plugin)
 			require("nvim-treesitter.query_predicates")
 		end,
-		dependencies = {
-			{
-				"nvim-treesitter/nvim-treesitter-textobjects",
-				config = function()
-					-- When in diff mode, we want to use the default
-					-- vim text objects c & C instead of the treesitter ones.
-					local move = require("nvim-treesitter.textobjects.move") ---@type table<string,fun(...)>
-					local configs = require("nvim-treesitter.configs")
-					for name, fn in pairs(move) do
-						if name:find("goto") == 1 then
-							move[name] = function(q, ...)
-								if vim.wo.diff then
-									local config = configs.get_module("textobjects.move")[name] ---@type table<string,string>
-									for key, query in pairs(config or {}) do
-										if q == query and key:find("[%]%[][cC]") then
-											vim.cmd("normal! " .. key)
-											return
-										end
-									end
-								end
-								return fn(q, ...)
-							end
-						end
-					end
-				end,
-				-- init = function()
-				-- 	-- PERF: no need to load the plugin, if we only need its queries for mini.ai
-				-- 	local plugin = require("lazy.core.config").spec.plugins["nvim-treesitter"]
-				-- 	local opts = require("lazy.core.plugin").values(plugin, "opts", false)
-				-- 	local enabled = false
-				-- 	if opts.textobjects then
-				-- 		for _, mod in ipairs({ "move", "select", "swap", "lsp_interop" }) do
-				-- 			if opts.textobjects[mod] and opts.textobjects[mod].enable then
-				-- 				enabled = true
-				-- 				break
-				-- 			end
-				-- 		end
-				-- 	end
-				--
-				-- 	if not enabled then
-				-- 		require("lazy.core.loader").disable_rtp_plugin("nvim-treesitter-textobjects")
-				-- 	end
-				-- end,
-			},
-		},
-		keys = {
-			{ "<c-space>", desc = "Increment selection" },
-			{ "<bs>", desc = "Decrement selection", mode = "x" },
-		},
 		---@type TSConfig
 		opts = {
 			modules = {},
@@ -79,7 +33,6 @@ return {
 				enable = true,
 				-- disable = { "python" },
 			},
-			context_commentstring = { enable = true, enable_autocmd = false },
 			ensure_installed = {
 				"javascript",
 				"html",
@@ -99,8 +52,8 @@ return {
 			incremental_selection = {
 				enable = true,
 				keymaps = {
-					init_selection = "<c-space>",
-					node_incremental = "<c-space>",
+					init_selection = "<c-s>",
+					node_incremental = "<c-s>",
 					scope_incremental = false,
 					node_decremental = "<bs>",
 				},
@@ -121,6 +74,105 @@ return {
 					vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 				end,
 			})
+		end,
+	},
+
+	-- better text-objects
+	{
+		"echasnovski/mini.ai",
+		event = "VeryLazy",
+		-- dependencies = { "nvim-treesitter-textobjects" },
+		opts = function()
+			local ai = require("mini.ai")
+			return {
+				n_lines = 500,
+				custom_textobjects = {
+					o = ai.gen_spec.treesitter({
+						a = { "@block.outer", "@conditional.outer", "@loop.outer" },
+						i = { "@block.inner", "@conditional.inner", "@loop.inner" },
+					}, {}),
+					f = ai.gen_spec.treesitter({ a = "@function.outer", i = "@function.inner" }, {}),
+					c = ai.gen_spec.treesitter({ a = "@class.outer", i = "@class.inner" }, {}),
+				},
+			}
+		end,
+		config = function(_, opts)
+			require("mini.ai").setup(opts)
+			-- register all text objects with which-key
+			if require("myutil").has("which-key.nvim") then
+				---@type table<string, string|table>
+				local i = {
+					[" "] = "Whitespace",
+					['"'] = 'Balanced "',
+					["'"] = "Balanced '",
+					["`"] = "Balanced `",
+					["("] = "Balanced (",
+					[")"] = "Balanced ) including white-space",
+					[">"] = "Balanced > including white-space",
+					["<lt>"] = "Balanced <",
+					["]"] = "Balanced ] including white-space",
+					["["] = "Balanced [",
+					["}"] = "Balanced } including white-space",
+					["{"] = "Balanced {",
+					["?"] = "User Prompt",
+					_ = "Underscore",
+					a = "Argument",
+					b = "Balanced ), ], }",
+					c = "Class",
+					f = "Function",
+					o = "Block, conditional, loop",
+					q = "Quote `, \", '",
+					t = "Tag",
+				}
+				local a = vim.deepcopy(i)
+				for k, v in pairs(a) do
+					a[k] = v:gsub(" including.*", "")
+				end
+
+				local ic = vim.deepcopy(i)
+				local ac = vim.deepcopy(a)
+				for key, name in pairs({ n = "Next", l = "Last" }) do
+					i[key] = vim.tbl_extend("force", { name = "Inside " .. name .. " textobject" }, ic)
+					a[key] = vim.tbl_extend("force", { name = "Around " .. name .. " textobject" }, ac)
+				end
+				require("which-key").register({ mode = { "o", "x" }, i = i, a = a })
+			end
+		end,
+	},
+
+	-- comments: auto switch comment style by cursor position
+	{
+		"JoosepAlviste/nvim-ts-context-commentstring",
+		lazy = true,
+		config = function()
+			require("ts_context_commentstring").setup({})
+			vim.g.skip_ts_context_commentstring_module = true
+		end,
+	},
+
+	{
+		"echasnovski/mini.comment",
+		version = "*",
+		event = "VeryLazy",
+		opts = {
+			options = {
+				-- Function to compute custom 'commentstring' (optional)
+				custom_commentstring = function()
+					return require("ts_context_commentstring").calculate_commentstring() or vim.bo.commentstring
+				end,
+
+				-- Whether to ignore blank lines when commenting
+				ignore_blank_line = false,
+
+				-- Whether to recognize as comment only lines without indent
+				start_of_line = false,
+
+				-- Whether to force single space inner padding for comment parts
+				pad_comment_parts = true,
+			},
+		},
+		config = function(_, opts)
+			require("mini.comment").setup(opts)
 		end,
 	},
 }

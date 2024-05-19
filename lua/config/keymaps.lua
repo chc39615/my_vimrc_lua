@@ -1,10 +1,15 @@
 local Util = require("myutil")
-
 local map = Util.map
 
 -- better up/down
-map("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
-map("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+map("n", "j", "v:count == 0 ? 'gj' : 'j'", nil, { expr = true, silent = true })
+map("n", "k", "v:count == 0 ? 'gk' : 'k'", nil, { expr = true, silent = true })
+
+-- force navigate
+-- map("n", "j", "<c-d>")
+-- map("n", "k", "<c-u>")
+-- map("n", "h", "10zh")
+-- map("n", "l", "10zl")
 
 -- Move to window using the <ctrl> hjkl keys
 map("n", "<C-h>", "<C-w>h", { desc = "Go to left window" })
@@ -93,27 +98,10 @@ map("n", "<leader>uc", function()
 	Util.toggle("conceallevel", false, { 0, conceallevel })
 end, { desc = "Toggle Conceal" })
 
--- lazygit
--- map("n", "<leader>gg", function()
--- 	Util.float_term({ "lazygit" }, { cwd = Util.get_root() })
--- end, { desc = "Lazygit (root dir)" })
--- map("n", "<leager>GG", function()
--- 	Util.float_term({ "lazygit" })
--- end, { desc = "Lazygit (cwd)" })
-
 -- highlights under cursor
 if vim.fn.has("nvim-0.9.0") == 1 then
 	map("n", "<leader>ui", vim.show_pos, { desc = "Inspect Pos" })
 end
-
--- floating terminal
--- map("n", "<leader>ft", function()
--- 	Util.float_term(nil, { cwd = Util.get_root() })
--- end, { desc = "Terminal (root dir)" })
--- map("n", "<leader>FT", function()
--- 	Util.float_term()
--- end, { desc = "terminal (cwd)" })
--- map("t", "<esc><esc>", "<C-\\><C-n>", { desc = "Terminal enter normal mode" })
 
 -- scroll screen horizontal
 map("n", "zl", "10zl", { desc = "Move screen right" })
