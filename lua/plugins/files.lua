@@ -81,32 +81,70 @@ return {
 		dependencies = {
 			{ "nvim-telescope/telescope.nvim" },
 		},
+		config = function()
+			local telescope = require("telescope")
+			telescope.setup({
+				extensions = {
+					["ui-select"] = {
+						require("telescope.themes").get_dropdown({}),
+					},
+				},
+			})
+			telescope.load_extension("ui-select")
+		end,
 	},
 
 	-- telescope
 	{
 		"nvim-telescope/telescope.nvim",
 		dependencies = { "nvim-lua/plenary.nvim" },
-		config = function()
-			local telescope = require("telescope")
-
-			if Util.has("telescope-ui-select.nvim") then
-				require("telescope").setup({
-					defaults = {
-						path_display = { "truncate" },
-					},
-					extensions = {
-						["ui-select"] = {
-							require("telescope.themes").get_dropdown({}),
+		event = "VeryLazy",
+		opts = function()
+			local actions = require("telescope.actions")
+			return {
+				defaults = {
+					mappings = {
+						i = {
+							["<left>"] = actions.results_scrolling_left,
+							["<right>"] = actions.results_scrolling_right,
+							["<PageUp>"] = actions.preview_scrolling_up,
+							["<PageDown>"] = actions.preview_scrolling_down,
+						},
+						n = {
+							["<left>"] = actions.results_scrolling_left,
+							["<right>"] = actions.results_scrolling_right,
+							["<PageUp>"] = actions.preview_scrolling_up,
+							["<PageDown>"] = actions.preview_scrolling_down,
 						},
 					},
-				})
-				telescope.load_extension("ui-select")
-			end
+					path_display = {
+						shorten = {
+							len = 2,
+							exclude = { 1, -1 },
+						},
+					},
+				},
+			}
+		end,
+		config = function(_, opts)
+			-- local telescope = require("telescope")
 
-			if Util.has("nvim-notify") then
-				telescope.load_extension("notify")
-			end
+			-- if Util.has("telescope-ui-select.nvim") then
+			-- 	require("telescope").setup({
+			-- 		extensions = {
+			-- 			["ui-select"] = {
+			-- 				require("telescope.themes").get_dropdown({}),
+			-- 			},
+			-- 		},
+			-- 	})
+			-- 	telescope.load_extension("ui-select")
+			-- end
+
+			-- if Util.has("nvim-notify") then
+			-- 	telescope.load_extension("notify")
+			-- end
+
+			require("telescope").setup(opts)
 
 			map("n", "<leader>ff", Util.telescope("files"), { desc = "find files" })
 			map("n", "<leader>fg", Util.telescope("live_grep"), { desc = "live grep" })
