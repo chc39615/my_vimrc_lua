@@ -28,6 +28,7 @@ return {
 				-- Using this option may slow down your editor, and yoiu may see some duplicate highlights
 				-- Instead of true it can also be a list of languades
 				additional_vim_regex_highlighting = false,
+				disable = { "vimdoc" },
 			},
 			indent = {
 				enable = true,
