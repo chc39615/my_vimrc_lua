@@ -214,7 +214,8 @@ return {
 
 	-- formatters
 	{
-		"jose-elias-alvarez/null-ls.nvim",
+		"nvimtools/none-ls.nvim",
+		-- "jose-elias-alvarez/null-ls.nvim",
 		event = { "BufReadPre", "BufNewFile" },
 		dependencies = { "mason.nvim" },
 		opts = function()
@@ -224,8 +225,11 @@ return {
 				sources = {
 					nls.builtins.formatting.fish_indent,
 					nls.builtins.diagnostics.fish,
+					nls.builtins.formatting.prettier,
 					nls.builtins.formatting.stylua,
 					nls.builtins.formatting.shfmt,
+					-- nls.builtins.formatting.isort,
+					-- nls.builtins.diagnostics.ruff,
 					-- nls.builtins.diagnostics.flake8,
 				},
 			}
