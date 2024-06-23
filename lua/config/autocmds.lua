@@ -88,6 +88,22 @@ vim.api.nvim_create_autocmd({ "InsertLeave" }, {
 	end,
 })
 
+-- Function to normalize paths
+local function normalize_path(path)
+	return path:gsub("\\", "/")
+end
+-- Normalize path (fix folder sign '\', '/' in windows)
+vim.api.nvim_create_autocmd("BufReadPost", {
+	group = augroup("normalize_path"),
+	callback = function()
+		local current_path = vim.fn.expand("%:p")
+		local normalized_path = normalize_path(current_path)
+		-- Example: Setting the status line to show normalized paths
+		vim.opt.statusline = "%f"
+		vim.api.nvim_set_option("statusline", normalized_path)
+	end,
+})
+
 -- only mapping for toggle term use term://**
 -- local function set_terminal_keymaps()
 -- 	local noremap = { noremap = true, silent = true }

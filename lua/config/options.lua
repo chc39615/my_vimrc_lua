@@ -91,3 +91,5 @@ if jit.os == "Windows" then
 		opt[option] = value
 	end
 end
+
+opt.shellslash = true
