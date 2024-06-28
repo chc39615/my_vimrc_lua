@@ -71,11 +71,11 @@ return {
 					},
 					lualine_x = {
 						-- stylua: ignore
-                        {
-                            require("noice").api.status.command.get,
-                            cond = require("noice").api.status.command.has,
-                            color = fg("Statement"),
-                        },
+                        -- {
+                        --     require("noice").api.status.command.get,
+                        --     cond = require("noice").api.status.command.has,
+                        --     color = fg("Statement"),
+                        -- },
 						{
 							function()
 								return require("noice").api.status.command.get()
@@ -86,11 +86,11 @@ return {
 							color = fg("Statement"),
 						},
 						-- stylua: ignore
-                        {
-                            require("noice").api.status.mode.get,
-                            cond = require("noice").api.status.command.has,
-                            color = fg("Constant"),
-                        },
+                        -- {
+                        --     require("noice").api.status.mode.get,
+                        --     cond = require("noice").api.status.command.has,
+                        --     color = fg("Constant"),
+                        -- },
 						{
 							function()
 								return require("noice").api.status.mode.get()
