@@ -88,6 +88,23 @@ vim.api.nvim_create_autocmd({ "InsertLeave" }, {
 	end,
 })
 
+-- Open Telescope when it's a Directory
+-- vim.api.nvim_create_autocmd("VimEnter", {
+-- 	callback = function(data)
+-- 		-- buffer is a directory
+-- 		local directory = vim.fn.isdirectory(data.file) == 1
+--
+-- 		-- change to the directory
+-- 		if directory then
+-- 			vim.cmd.cd(data.file)
+-- 			vim.cmd("Telescope find_files")
+-- 			-- require("nvim-tree.api").tree.open()
+-- 		end
+-- 	end,
+-- 	group = augroup("general"),
+-- 	desc = "Open Telescope when it's a Directory",
+-- })
+
 -- Function to normalize paths
 local function normalize_path(path)
 	return path:gsub("\\", "/")
