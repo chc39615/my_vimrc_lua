@@ -9,7 +9,14 @@ return {
 		dependencies = {
 			"rafamadriz/friendly-snippets",
 			config = function()
-				require("luasnip.loaders.from_vscode").lazy_load()
+				-- Dynamically get the path to friendly-snippets
+				local friendly_snippets_path = vim.fn.stdpath("data") .. "/lazy/friendly-snippets"
+
+				-- Load VSCode-like snippets from the dynamically obtained path
+				require("luasnip.loaders.from_vscode").lazy_load({
+					paths = { friendly_snippets_path },
+				})
+				-- require("luasnip.loaders.from_vscode").lazy_load()
 			end,
 		},
 		opts = {
