@@ -95,5 +95,6 @@ end
 local config = require("config")
 if config.get_device_name() == "AOC813288-NB1" then
 	-- set python3 provider depends on different computer
+	-- :help provider-python for advance information
 	vim.g.python3_host_prog = "C:\\Users\\cody_zhang\\.pyenv-win-venv\\envs\\py3nvim\\Scripts\\python.exe"
 end
