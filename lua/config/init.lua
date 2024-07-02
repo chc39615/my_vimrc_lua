@@ -159,4 +159,15 @@ setmetatable(M, {
 	end,
 })
 
+function M.get_device_name()
+	local handle = io.popen("hostname")
+	if handle then
+		local hostname = handle:read("*a"):gsub("%s+", "")
+		handle:close()
+		return hostname
+	else
+		return nil
+	end
+end
+
 return M

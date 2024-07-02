@@ -92,4 +92,8 @@ if jit.os == "Windows" then
 	end
 end
 
-opt.shellslash = true
+local config = require("config")
+if config.get_device_name() == "AOC813288-NB1" then
+	-- set python3 provider depends on different computer
+	vim.g.python3_host_prog = "C:\\Users\\cody_zhang\\.pyenv-win-venv\\envs\\py3nvim\\Scripts\\python.exe"
+end

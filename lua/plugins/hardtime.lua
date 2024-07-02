@@ -4,6 +4,7 @@ return {
 		"m4xshen/hardtime.nvim",
 		dependencies = { "MunifTanjim/nui.nvim", "nvim-lua/plenary.nvim" },
 		opts = {},
+		-- enabled = false,
 		config = function()
 			require("hardtime").setup({
 				disable_mouse = false,
@@ -15,7 +16,7 @@ return {
 					["<Right>"] = { "", "n" },
 				},
 				disabled_filetypes = {
-					"NvimTree",
+					"NvimTree*",
 					"TelescopePrompt",
 					"aerial",
 					"alpha",
