@@ -1,5 +1,4 @@
-local Util = require("myutil")
-local map = Util.map
+local map = Myutil.map
 
 -- better up/down
 map("n", "j", "v:count == 0 ? 'gj' : 'j'", nil, { expr = true, silent = true })
@@ -32,7 +31,7 @@ map("v", "<A-j>", ":m '>+1<cr>gv=gv", { desc = "Move down" })
 map("v", "<A-k>", ":m '<-2<cr>gv=gv", { desc = "Move up" })
 
 -- buffers
-if Util.has("bufferline.nvim") then
+if Myutil.has("bufferline.nvim") then
 	-- map("n", "<S-h>", "<cmd>BufferLineCyclePrev<cr>", { desc = "Prev buffer" })
 	-- map("n", "<S-l>", "<cmd>BufferLineCycleNext<cr>", { desc = "Next buffer" })
 	map("n", "[b", "<cmd>BufferLineCyclePrev<cr>", { desc = "Prev buffer" })
@@ -67,7 +66,7 @@ map("i", ".", ".<c-g>u")
 map("i", ":", ":<c-g>u")
 
 -- save file
-map({ "i", "v", "n", "s" }, "<C-s>", "<cmd>w<cr><esc>", { desc = "Save file" })
+-- map({ "i", "v", "n", "s" }, "<C-s>", "<cmd>w<cr><esc>", { desc = "Save file" })
 
 -- better indenting
 map("v", "<", "<gv")
@@ -76,26 +75,26 @@ map("v", ">", ">gv")
 map("n", "<leader>xl", "<cmd>lopen<cr>", { desc = "Location List" })
 map("n", "<leader>xq", "<cmd>copen<cr>", { desc = "Quickfix List" })
 
-if not Util.has("trouble.nvim") then
-	map("n", "[q", vim.cmd.cprev, { desc = "Previous quickfix" })
-	map("n", "]q", vim.cmd.cnext, { desc = "Next quickfix" })
-end
+-- if not Util.has("trouble.nvim") then
+-- 	map("n", "[q", vim.cmd.cprev, { desc = "Previous quickfix" })
+-- 	map("n", "]q", vim.cmd.cnext, { desc = "Next quickfix" })
+-- end
 
 -- toggle options
 -- map("n", "<leader>uf", require("lsp.format").toggle, { desc = "Toggle format on Save" })
 map("n", "<leader>us", function()
-	Util.toggle("spell")
+	Myutil.toggle("spell")
 end, { desc = "Toggle Spelling" })
 map("n", "<leader>uw", function()
-	Util.toggle("wrap")
+	Myutil.toggle("wrap")
 end, { desc = "Toggle Word Wrap" })
 map("n", "<leader>ul", function()
-	Util.toggle("list")
+	Myutil.toggle("list")
 end, { desc = "Toggle list" })
-map("n", "<leader>ud", Util.toggle_diagnostics, { desc = "Toggle Diagnostics" })
+map("n", "<leader>ud", Myutil.toggle.diagnostics, { desc = "Toggle Diagnostics" })
 local conceallevel = vim.o.conceallevel > 0 and vim.o.conceallevel or 3
 map("n", "<leader>uc", function()
-	Util.toggle("conceallevel", false, { 0, conceallevel })
+	Myutil.toggle("conceallevel", false, { 0, conceallevel })
 end, { desc = "Toggle Conceal" })
 
 -- highlights under cursor
@@ -119,3 +118,19 @@ map("v", "y", "y`]", { desc = "better yank" })
 
 -- change directory
 -- map('n', '<leader>cd', ":lcd %:p:h<cr>:pwd<cr>", { desc = "change directory to current file path" })
+
+-- diagnostic
+local diagnostic_goto = function(next, severity)
+	local go = next and vim.diagnostic.goto_next or vim.diagnostic.goto_prev
+	severity = severity and vim.diagnostic.severity[severity] or nil
+	return function()
+		go({ severity = severity })
+	end
+end
+map("n", "<leader>cd", vim.diagnostic.open_float, { desc = "Line Diagnostics" })
+map("n", "]d", diagnostic_goto(true), { desc = "Next Diagnostic" })
+map("n", "[d", diagnostic_goto(false), { desc = "Prev Diagnostic" })
+map("n", "]e", diagnostic_goto(true, "ERROR"), { desc = "Next Error" })
+map("n", "[e", diagnostic_goto(false, "ERROR"), { desc = "Prev Error" })
+map("n", "]w", diagnostic_goto(true, "WARN"), { desc = "Next Warning" })
+map("n", "[w", diagnostic_goto(false, "WARN"), { desc = "Prev Warning" })

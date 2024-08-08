@@ -28,10 +28,10 @@ opt.smartcase = true
 opt.hlsearch = true
 opt.incsearch = true
 
--- keep 12 lines below
-opt.scrolloff = 12
--- keep 8 spaces
-opt.sidescrolloff = 8
+-- keep 3 lines below
+opt.scrolloff = 3
+-- keep 10 spaces
+opt.sidescrolloff = 10
 
 -- allow <BS> <DEL> CTRL-W CTRL-U in insert mode to delete
 opt.backspace = "indent,eol,start"
@@ -64,7 +64,7 @@ opt.listchars = { eol = "↵", tab = "<->", extends = "»", precedes = "«", spa
 
 -- autocomplete
 opt.completeopt = "menu,menuone,noselect"
-opt.conceallevel = 3 -- Hide * markup for bold and italic
+opt.conceallevel = 3           -- Hide * markup for bold and italic
 opt.formatoptions = "jcroqlnt" -- tcqj
 opt.grepformat = "%f:%l:%c:%m"
 opt.grepprg = "rg --vimgrep"
@@ -78,23 +78,14 @@ vim.g.markdown_recommended_style = 0
 
 -- if os is Windows, set shell=powershell
 if jit.os == "Windows" then
-	local powershell_options = {
-		shell = vim.fn.executable("pwsh") == 1 and "pwsh" or "powershell",
-		shellcmdflag = "-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;",
-		shellredir = "-RedirectStandardOutput %s -NoNewWindow -Wait",
-		shellpipe = "2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode",
-		shellquote = "",
-		shellxquote = "",
-	}
-
-	for option, value in pairs(powershell_options) do
-		opt[option] = value
-	end
+    Myutil.terminal.setup("pwsh")
 end
 
-local config = require("config")
-if config.get_device_name() == "AOC813288-NB1" then
-	-- set python3 provider depends on different computer
-	-- :help provider-python for advance information
-	vim.g.python3_host_prog = "C:\\Users\\cody_zhang\\.pyenv-win-venv\\envs\\py3nvim\\Scripts\\python.exe"
+-- check and setup provider.python (checkhealth python)
+vim.g.python3_host_prog = Myutil.providers.venv_python
+if not Myutil.providers.check_pynvim() then
+    Myutil.providers.setup_pynvim()
 end
+
+vim.opt.path:append({ "**" }) -- Finding files - Search down into subfolders
+vim.opt.wildignore:append({ "*/node_modules/*" })

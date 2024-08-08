@@ -1,37 +1,33 @@
 return {
+	-- Treesitter is a new parser generator tool that we can
+	-- use in Neovim to power faster and more accurate
+	-- syntax highlighting.
 	{
 		"nvim-treesitter/nvim-treesitter",
+		version = false, -- last release is way too old and doesn't work on Windows
 		build = ":TSUpdate",
-		-- event = { "LazyFile", "VeryLazy" },
-		event = { "BufReadPre", "BufNewfile" },
-		dependencies = {
-			"nvim-treesitter/nvim-treesitter-textobjects",
-		},
+		event = { "LazyFile", "VeryLazy" },
+		lazy = vim.fn.argc(-1) == 0, -- load treesitter early when opening a file from the cmdline
 		init = function(plugin)
 			-- PERF: add nvim-treesitter queries to the rtp and it's custom query predicates early
 			-- This is needed because a bunch of plugins no longer `require("nvim-treesitter")`, which
-			-- no longer trigger the **nvim-treeitter** module to be loaded in time.
-			-- Luckily, the only thins that those plugins need are the custom queries, which we make available
+			-- no longer trigger the **nvim-treesitter** module to be loaded in time.
+			-- Luckily, the only things that those plugins need are the custom queries, which we make available
 			-- during startup.
 			require("lazy.core.loader").add_to_rtp(plugin)
 			require("nvim-treesitter.query_predicates")
 		end,
+		cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
+		keys = {
+			{ "<c-s>", desc = "Increment Selection" },
+			{ "<bs>", desc = "Decrement Selection", mode = "x" },
+		},
+		opts_extend = { "ensure_installed" },
 		---@type TSConfig
+		---@diagnostic disable-next-line: missing-fields
 		opts = {
-			modules = {},
-			ignore_install = {},
-			highlight = {
-				-- `false` will disable the whole extension
-				enable = true,
-				-- Setting this to true will run `:h syntax` and tree-sitter at the same time
-				-- Set this true if youi depend on 'syntax' being enabled (like for indentation)
-				-- Using this option may slow down your editor, and yoiu may see some duplicate highlights
-				-- Instead of true it can also be a list of languades
-				additional_vim_regex_highlighting = false,
-				disable = function(ft, buf)
-					return vim.b[buf].bigfile or vim.fn.win_gettype() == "command"
-				end,
-			},
+			highlight = { enable = true },
+			indent = { enable = true },
 			ensure_installed = {
 				"vimdoc",
 				"javascript",
@@ -52,127 +48,119 @@ return {
 			incremental_selection = {
 				enable = true,
 				keymaps = {
-					init_selection = "<c-s>",
-					node_incremental = "<c-s>",
+					init_selection = "<C-s>",
+					node_incremental = "<C-s>",
 					scope_incremental = false,
 					node_decremental = "<bs>",
 				},
 			},
-			-- Install parsers synchronously (only applied to `ensure_installed`)
-			sync_install = false,
-			-- Automatically install missing parsers when entering buffer
-			auto_install = false,
+			textobjects = {
+				move = {
+					enable = true,
+					goto_next_start = {
+						["]f"] = "@function.outer",
+						["]c"] = "@class.outer",
+						["]a"] = "@parameter.inner",
+					},
+					goto_next_end = { ["]F"] = "@function.outer", ["]C"] = "@class.outer", ["]A"] = "@parameter.inner" },
+					goto_previous_start = {
+						["[f"] = "@function.outer",
+						["[c"] = "@class.outer",
+						["[a"] = "@parameter.inner",
+					},
+					goto_previous_end = {
+						["[F"] = "@function.outer",
+						["[C"] = "@class.outer",
+						["[A"] = "@parameter.inner",
+					},
+				},
+			},
 		},
+		---@param opts TSConfig
 		config = function(_, opts)
+			if type(opts.ensure_installed) == "table" then
+				opts.ensure_installed = Myutil.dedup(opts.ensure_installed)
+			end
 			require("nvim-treesitter.configs").setup(opts)
-
-			-- vim.api.nvim_create_autocmd({ "BufEnter", "BufAdd", "BufNew", "BufNewFile", "BufWinEnter" }, {
-			-- 	group = vim.api.nvim_create_augroup("TS_FOLD_WORKAROUND", {}),
-			-- 	callback = function()
-			-- 		vim.opt.foldlevel = 99
-			-- 		vim.opt.foldmethod = "expr"
-			-- 		vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
-			-- 	end,
-			-- })
 		end,
 	},
 
-	-- better text-objects
 	{
-		"echasnovski/mini.ai",
+		"nvim-treesitter/nvim-treesitter-textobjects",
 		event = "VeryLazy",
-		-- dependencies = { "nvim-treesitter-textobjects" },
-		opts = function()
-			local ai = require("mini.ai")
-			return {
-				n_lines = 500,
-				custom_textobjects = {
-					o = ai.gen_spec.treesitter({
-						a = { "@block.outer", "@conditional.outer", "@loop.outer" },
-						i = { "@block.inner", "@conditional.inner", "@loop.inner" },
-					}, {}),
-					f = ai.gen_spec.treesitter({ a = "@function.outer", i = "@function.inner" }, {}),
-					c = ai.gen_spec.treesitter({ a = "@class.outer", i = "@class.inner" }, {}),
-				},
-			}
-		end,
-		config = function(_, opts)
-			require("mini.ai").setup(opts)
-			-- register all text objects with which-key
-			if require("myutil").has("which-key.nvim") then
-				---@type table<string, string|table>
-				local i = {
-					[" "] = "Whitespace",
-					['"'] = 'Balanced "',
-					["'"] = "Balanced '",
-					["`"] = "Balanced `",
-					["("] = "Balanced (",
-					[")"] = "Balanced ) including white-space",
-					[">"] = "Balanced > including white-space",
-					["<lt>"] = "Balanced <",
-					["]"] = "Balanced ] including white-space",
-					["["] = "Balanced [",
-					["}"] = "Balanced } including white-space",
-					["{"] = "Balanced {",
-					["?"] = "User Prompt",
-					_ = "Underscore",
-					a = "Argument",
-					b = "Balanced ), ], }",
-					c = "Class",
-					f = "Function",
-					o = "Block, conditional, loop",
-					q = "Quote `, \", '",
-					t = "Tag",
-				}
-				local a = vim.deepcopy(i)
-				for k, v in pairs(a) do
-					a[k] = v:gsub(" including.*", "")
-				end
+		enabled = true,
+		config = function()
+			-- If treesitter is already loaded, we need to run config again for textobjects
+			if Myutil.is_loaded("nvim-treesitter") then
+				local opts = Myutil.opts("nvim-treesitter")
+				require("nvim-treesitter.configs").setup({ textobjects = opts.textobjects })
+			end
 
-				local ic = vim.deepcopy(i)
-				local ac = vim.deepcopy(a)
-				for key, name in pairs({ n = "Next", l = "Last" }) do
-					i[key] = vim.tbl_extend("force", { name = "Inside " .. name .. " textobject" }, ic)
-					a[key] = vim.tbl_extend("force", { name = "Around " .. name .. " textobject" }, ac)
+			-- When in diff mode, we want to use the default
+			-- vim text objects c & C instead of the treesitter ones.
+			local move = require("nvim-treesitter.textobjects.move") ---@type table<string,fun(...)>
+			local configs = require("nvim-treesitter.configs")
+			for name, fn in pairs(move) do
+				if name:find("goto") == 1 then
+					move[name] = function(q, ...)
+						if vim.wo.diff then
+							local config = configs.get_module("textobjects.move")[name] ---@type table<string,string>
+							for key, query in pairs(config or {}) do
+								if q == query and key:find("[%]%[][cC]") then
+									vim.cmd("normal! " .. key)
+									return
+								end
+							end
+						end
+						return fn(q, ...)
+					end
 				end
-				require("which-key").register({ mode = { "o", "x" }, i = i, a = a })
 			end
 		end,
 	},
 
-	-- comments: auto switch comment style by cursor position
+	-- Automatically add closing tags for HTML and JSX
 	{
-		"JoosepAlviste/nvim-ts-context-commentstring",
-		lazy = true,
-		config = function()
-			require("ts_context_commentstring").setup({})
-			vim.g.skip_ts_context_commentstring_module = true
-		end,
+		"windwp/nvim-ts-autotag",
+		event = "LazyFile",
+		opts = {},
 	},
 
+	-- Better text-objects
 	{
-		"echasnovski/mini.comment",
-		version = "*",
+		"echasnovski/mini.ai",
 		event = "VeryLazy",
-		opts = {
-			options = {
-				-- Function to compute custom 'commentstring' (optional)
-				custom_commentstring = function()
-					return require("ts_context_commentstring").calculate_commentstring() or vim.bo.commentstring
-				end,
-
-				-- Whether to ignore blank lines when commenting
-				ignore_blank_line = false,
-
-				-- Whether to recognize as comment only lines without indent
-				start_of_line = false,
-
-				-- Whether to force single space inner padding for comment parts
-				pad_comment_parts = true,
-			},
-		},
-		config = function(_, opts)
-			require("mini.comment").setup(opts)
+		opts = function()
+			Myutil.on_load("which-key.nvim", function()
+				vim.schedule(Myutil.mini.ai_whichkey)
+			end)
+			local ai = require("mini.ai")
+			return {
+				n_lines = 500,
+				custom_textobjects = {
+					o = ai.gen_spec.treesitter({ -- code block
+						a = { "@block.outer", "@conditional.outer", "@loop.outer" },
+						i = { "@block.inner", "@conditional.inner", "@loop.inner" },
+					}),
+					f = ai.gen_spec.treesitter({ a = "@function.outer", i = "@function.inner" }), -- function
+					c = ai.gen_spec.treesitter({ a = "@class.outer", i = "@class.inner" }), -- class
+					t = { "<([%p%w]-)%f[^<%w][^<>]->.-</%1>", "^<.->().*()</[^/]->$" }, -- tags
+					d = { "%f[%d]%d+" }, -- digits
+					e = { -- Word with case
+						{
+							"%u[%l%d]+%f[^%l%d]",
+							"%f[%S][%l%d]+%f[^%l%d]",
+							"%f[%P][%l%d]+%f[^%l%d]",
+							"^[%l%d]+%f[^%l%d]",
+						},
+						"^().*()$",
+					},
+					i = Myutil.mini.ai_indent, -- indent
+					g = Myutil.mini.ai_buffer, -- buffer
+					u = ai.gen_spec.function_call(), -- u for "Usage"
+					U = ai.gen_spec.function_call({ name_pattern = "[%w_]" }), -- without dot in function name
+				},
+			}
 		end,
 	},
 }

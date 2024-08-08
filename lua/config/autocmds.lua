@@ -1,5 +1,5 @@
 local function augroup(name)
-	return vim.api.nvim_create_augroup("lazyvim_" .. name, { clear = true })
+	return vim.api.nvim_create_augroup("mygroup_" .. name, { clear = true })
 end
 
 -- Highlight on yank
@@ -106,20 +106,20 @@ vim.api.nvim_create_autocmd({ "InsertLeave" }, {
 -- })
 
 -- Function to normalize paths
-local function normalize_path(path)
-	return path:gsub("\\", "/")
-end
+-- local function normalize_path(path)
+-- 	return path:gsub("\\", "/")
+-- end
 -- Normalize path (fix folder sign '\', '/' in windows)
-vim.api.nvim_create_autocmd("BufReadPost", {
-	group = augroup("normalize_path"),
-	callback = function()
-		local current_path = vim.fn.expand("%:p")
-		local normalized_path = normalize_path(current_path)
-		-- Example: Setting the status line to show normalized paths
-		vim.opt.statusline = "%f"
-		vim.api.nvim_set_option("statusline", normalized_path)
-	end,
-})
+-- vim.api.nvim_create_autocmd("BufReadPost", {
+-- 	group = augroup("normalize_path"),
+-- 	callback = function()
+-- 		local current_path = vim.fn.expand("%:p")
+-- 		local normalized_path = normalize_path(current_path)
+-- 		-- Example: Setting the status line to show normalized paths
+-- 		vim.opt.statusline = "%f"
+-- 		vim.api.nvim_set_option("statusline", normalized_path)
+-- 	end,
+-- })
 
 -- only mapping for toggle term use term://**
 -- local function set_terminal_keymaps()
