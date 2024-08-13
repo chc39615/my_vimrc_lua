@@ -1,9 +1,9 @@
 if vim.loader then
-	vim.loader.enable()
+    vim.loader.enable()
 end
 
 _G.dd = function(...)
-	require("myutil.debug").dump(...)
+    require("myutil.debug").dump(...)
 end
 vim.print = _G.dd
 
