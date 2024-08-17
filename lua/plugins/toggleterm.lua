@@ -60,6 +60,25 @@ return {
                     buf_keymap(term.bufnr, "t", "<c-k>", [[<c-\><c-n><c-w>k]], noremap)
                     buf_keymap(term.bufnr, "t", "<c-l>", [[<c-\><c-n><c-w>l]], noremap)
                     buf_keymap(term.bufnr, "t", "<C-Bslash>", "<cmd>ToggleTerm<cr>", noremap)
+
+
+                    if Myutil.has('dap') and Myutil.has("dapui") then
+                        vim.api.nvim_create_autocmd("WinClosed", {
+                            buffer = term.bufnr,
+                            callback = function()
+                                vim.schedule(function()
+                                    local filetype = vim.bo[term.bufnr].filetype
+                                    if filetype == "toggleterm" then
+                                        local dap, dapui = require("dap"), require("dapui")
+                                        if dap.session() then
+                                            print('dapui reset')
+                                            dapui.open({ reset = true })
+                                        end
+                                    end
+                                end)
+                            end
+                        })
+                    end
                 end,
             })
             function Toggle_horizontal()
