@@ -1,17 +1,17 @@
 return {
-    { "nvim-tree/nvim-web-devicons" },
-    { "nvim-lua/plenary.nvim" },
-    { "MunifTanjim/nui.nvim" },
+    { "nvim-tree/nvim-web-devicons", lazy = true },
+    { "nvim-lua/plenary.nvim", lazy = true },
+    { "MunifTanjim/nui.nvim", lazy = true },
 
 
     {
         "folke/lazydev.nvim",
-        ft = "lua",
+        ft = { "lua", "vim" },
         cmd = "LazyDev",
         opts = {
             library = {
                 { path = "luvit-meta/library", words = { "vim%.uv" } },
-                { path = "lazy.nvim",          words = { "LazyVim" } },
+                { path = "lazy.nvim", words = { "LazyVim" } },
             },
         },
     },
