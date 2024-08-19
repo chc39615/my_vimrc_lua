@@ -61,8 +61,7 @@ return {
                     buf_keymap(term.bufnr, "t", "<c-l>", [[<c-\><c-n><c-w>l]], noremap)
                     buf_keymap(term.bufnr, "t", "<C-Bslash>", "<cmd>ToggleTerm<cr>", noremap)
 
-
-                    if Myutil.has('dap') and Myutil.has("dapui") then
+                    if Myutil.has('nvim-dap') and Myutil.has("nvim-dap-ui") then
                         vim.api.nvim_create_autocmd("WinClosed", {
                             buffer = term.bufnr,
                             callback = function()
