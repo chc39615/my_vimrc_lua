@@ -124,25 +124,6 @@ return {
                 { silent = true }
             )
 
-
-            -- local function get_window_filetypes()
-            --     local win_filetypes = {}
-            --     for _, winid in ipairs(vim.api.nvim_list_wins()) do
-            --         local bufid = vim.api.nvim_win_get_buf(winid)
-            --         local filetype = vim.bo[bufid].filetype
-            --         table.insert(win_filetypes, { winid = winid, filetype = filetype })
-            --     end
-            --     return win_filetypes
-            -- end
-
-            -- Create a command to execute the function
-            -- vim.api.nvim_create_user_command('GetWindowFiletypes', function()
-            --     local filetypes = get_window_filetypes()
-            --     for _, win in ipairs(filetypes) do
-            --         print("Window ID:", win.winid, "Filetype:", win.filetype)
-            --     end
-            -- end, {})
-
             local function reset_dapui_if_open()
                 local found_dapui = false
                 for _, winid in ipairs(vim.api.nvim_list_wins()) do
@@ -154,105 +135,13 @@ return {
                     end
                 end
                 if found_dapui then
-                    dapui.close()
                     dapui.open({ reset = true })
                 end
             end
 
-            vim.api.nvim_create_user_command("ResetDapuiIfOpen", function()
+            vim.api.nvim_create_user_command("ResetDapUI", function()
                 reset_dapui_if_open()
             end, {})
-
-
-            --Below works for when buffers are created and destroyed but not for buffers that are:
-            --                                          --> hidden or                               (aka ToggleTerm)
-            --                                              --> resized!                            (When resizing splits)
-
-            -- vim.api.nvim_create_augroup("DAP_UI_RESET", { clear = true })
-
-            -- local bufferNames = {}
-
-            -- vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
-            --     group = "DAP_UI_RESET",
-            --     pattern = "*",
-            --     callback = function()
-            --         local bufferName = vim.fn.expand("%")
-            --
-            --         if dap.session() and bufferName ~= "DAP Watches"
-            --             and bufferName ~= "DAP Stacks"
-            --             and bufferName ~= "DAP Breakpoints"
-            --             and bufferName ~= "DAP Scopes"
-            --             and bufferName ~= "DAP Console"
-            --             and not string.find(bufferName, "%[dap%-repl%-", 1) and bufferName ~= "DAP Hover" then
-            --             table.insert(bufferNames, bufferName)
-            --
-            --             dapui.open({ reset = true })
-            --         end
-            --     end
-            -- })
-
-            -- vim.api.nvim_create_autocmd({ "BufUnload" }, {
-            --     group = "DAP_UI_RESET",
-            --     pattern = "*",
-            --     callback = function()
-            --         if dap.session() then
-            --             for i = 1, #bufferNames do
-            --                 local index = -1
-            --
-            --                 for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-            --                     if bufferNames[i] == vim.api.nvim_buf_get_name(buf) then
-            --                         index = vim.api.nvim_buf_get_number(buf)
-            --                         break
-            --                     end
-            --                 end
-            --
-            --                 vim.schedule(function()
-            --                     if not vim.api.nvim_buf_is_loaded(index) then
-            --                         table.remove(bufferNames, i)
-            --                         dapui.open({ reset = true })
-            --                     end
-            --                 end)
-            --             end
-            --         end
-            --     end
-            --
-            -- })
-
-            -- vim.api.nvim_create_autocmd("WinClosed", {
-            --     callback = function(event)
-            --         if dap.session() then
-            --             vim.schedule(function()
-            --                 dapui.close()
-            --                 dapui.open({ reset = true })
-            --             end)
-            --             -- dapui.close()
-            --             -- dapui.open({ reset = true })
-            --         end
-            --
-            --         -- print(vim.bo[closed_bufid].filetype)
-            --         -- Get the buffer id of the closed window
-            --         -- local closed_bufid = tonumber(vim.fn.expand("<afile"))
-            --         -- local closed_filetype = vim.bo[closed_bufid].filetype
-            --         --
-            --         -- if closed_filetype:find("dapui") then
-            --         --     return
-            --         -- end
-            --
-            --         -- local found_dapui = false
-            --         -- for _, winid in ipairs(vim.api.nvim_list_wins()) do
-            --         --     local bufid = vim.api.nvim_win_get_buf(winid)
-            --         --     local filetype = vim.bo[bufid].filetype
-            --         --     if filetype:find("dapui") then
-            --         --         found_dapui = true
-            --         --         break
-            --         --     end
-            --         -- end
-            --         -- if found_dapui then
-            --         --     dapui.close()
-            --         --     dapui.open({ reset = true })
-            --         -- end
-            --     end
-            -- })
         end,
     },
     -- mason.nvim integration
@@ -280,16 +169,16 @@ return {
     },
     {
         "mfussenegger/nvim-dap-python",
-        dependencies = {
-            { "folke/neodev.nvim", opts = { experimental = { pathStrict = true } } },
-        },
+        -- dependencies = {
+        --     { "folke/neodev.nvim", opts = { experimental = { pathStrict = true } } },
+        -- },
         ft = "python",
         config = function()
-            require("neodev").setup({
-                library = {
-                    plugins = { "nvim-dap-ui", types = true },
-                },
-            })
+            -- require("neodev").setup({
+            --     library = {
+            --         plugins = { "nvim-dap-ui", types = true },
+            --     },
+            -- })
 
             local cwd = vim.fn.getcwd()
             local pythons = {}
