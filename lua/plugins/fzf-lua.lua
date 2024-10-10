@@ -201,9 +201,26 @@ return {
                 callback = function()
                     local stats = vim.uv.fs_stat(vim.fn.argv(0))
                     if stats and stats.type == "directory" then
+                        -- Capture the buffer number of the empty buffer before launching fzf-lua
+                        local empty_bufnr = vim.api.nvim_get_current_buf()
+
                         -- delay fzf-lua execution to ensure it captures focus
                         vim.schedule_wrap(function()
                             Myutil.pick.open("auto")
+                            -- Create another autocmd to delete the empty buffer after a file is opened
+                            vim.api.nvim_create_autocmd("BufEnter", {
+                                desc = "Delete empty buffer after fzf-lua opens a file",
+                                once = true, -- Only run once after file is opened
+                                callback = function()
+                                    -- Check if the current buffer is not the original empty buffer
+                                    vim.schedule(function()
+                                        local current_bufnr = vim.api.nvim_get_current_buf()
+                                        if current_bufnr ~= empty_bufnr and vim.api.nvim_buf_is_valid(empty_bufnr) then
+                                            vim.cmd("bdelete " .. empty_bufnr) -- Delete the original empty buffer
+                                        end
+                                    end)()
+                                end,
+                            })
                         end)()
                     end
                 end,

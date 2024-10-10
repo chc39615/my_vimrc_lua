@@ -61,6 +61,8 @@ return {
         --     })
         -- end,
         opts = {
+            enable_git_status = true,
+            enable_diagnostics = false,
             sources = { "filesystem", "buffers", "git_status" },
             open_files_do_not_replace_types = { "terminal", "Trouble", "trouble", "qf", "Outline" },
             event_handlers = {
@@ -92,48 +94,50 @@ return {
                 follow_current_file = { enabled = true },
                 use_libuv_file_watcher = true,
                 window = {
+                    position = "left",
                     mappings = {
-                        ["F"] = "clear_filter",
-                    },
-                },
-            },
-            window = {
-                position = "left",
-                mappings = {
-                    ["h"] = function(state)
-                        local node = state.tree:get_node()
-                        if node.type == "directory" and node:is_expanded() then
-                            require("neo-tree.sources.filesystem").toggle_directory(state, node)
-                        else
-                            require("neo-tree.ui.renderer").focus_node(state, node:get_parent_id())
-                        end
-                    end,
-                    ["l"] = function(state)
-                        local node = state.tree:get_node()
-                        if node.type == "directory" then
-                            if not node:is_expanded() then
-                                require("neo-tree.sources.filesystem").toggle_directory(state, node)
-                            elseif node:has_children() then
-                                require("neo-tree.ui.renderer").focus_node(state, node:get_child_ids()[1])
-                            end
-                        end
-                    end,
-                    ["<space>"] = "none",
-                    ["Y"] = {
-                        function(state)
+                        ["h"] = function(state)
                             local node = state.tree:get_node()
-                            local path = node:get_id()
-                            vim.fn.setreg("+", path, "c")
+                            if node.type == "directory" and node:is_expanded() then
+                                require("neo-tree.sources.filesystem").toggle_directory(state, node)
+                            else
+                                require("neo-tree.ui.renderer").focus_node(state, node:get_parent_id())
+                            end
                         end,
-                        desc = "Copy Path to Clipboard",
-                    },
-                    ["O"] = {
-                        function(state)
-                            require("lazy.util").open(state.tree:get_node().path, { system = true })
+                        ["l"] = function(state)
+                            local node = state.tree:get_node()
+                            if node.type == "directory" then
+                                if not node:is_expanded() then
+                                    require("neo-tree.sources.filesystem").toggle_directory(state, node)
+                                elseif node:has_children() then
+                                    require("neo-tree.ui.renderer").focus_node(state, node:get_child_ids()[1])
+                                end
+                            end
                         end,
-                        desc = "Open with System Application",
+                        ["<space>"] = "none",
+                        ["Y"] = {
+                            function(state)
+                                local node = state.tree:get_node()
+                                local path = node:get_id()
+                                vim.fn.setreg("+", path, "c")
+                            end,
+                            desc = "Copy Path to Clipboard",
+                        },
+                        ["O"] = {
+                            function(state)
+                                require("lazy.util").open(state.tree:get_node().path, { system = true })
+                            end,
+                            desc = "Open with System Application",
+                        },
+                        ["P"] = { "toggle_preview", config = { use_float = false } },
+                        ["F"] = "clear_filter",
+                        ["/"] = "none",
+                        ["s"] = "open_split",
+                        ["v"] = "open_vsplit",
+                        ["<c-f>"] = "none",
+                        ["<c-b>"] = "none",
+                        ["<esc>"] = "none",
                     },
-                    ["P"] = { "toggle_preview", config = { use_float = false } },
                 },
             },
             default_component_configs = {
